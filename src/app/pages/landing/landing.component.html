@@ -1,0 +1,166 @@
+<div class="min-h-screen bg-[radial-gradient(circle_at_top,_#eef2ff,_#f8fafc_45%,_#e2e8f0)] px-4 py-6 md:px-8 md:py-10">
+
+    <div class="mx-auto flex w-full max-w-6xl justify-center">
+
+        <app-card
+            styleClass="w-full max-w-xl rounded-3xl border border-slate-200 bg-white/95 shadow-2xl backdrop-blur">
+
+            <!-- Logo -->
+
+            <div class="flex flex-col items-center">
+
+                <div
+                    class="flex h-14 w-14 items-center justify-center rounded-full bg-[#7B4DFF] shadow-lg">
+
+                    <img
+                        src="/cross.png"
+                        alt="Cross"
+                        class="h-7 w-7 object-contain">
+
+                </div>
+
+                <h1 class="mt-5 text-3xl font-bold text-slate-900">
+
+                    Church Quiz
+
+                </h1>
+
+                <p class="mt-2 text-sm text-slate-500">
+
+                    Ready to test what you know?
+
+                </p>
+
+            </div>
+
+            <hr class="my-8">
+
+            <!-- Avatar -->
+
+            <h3
+                class="text-center text-xs font-semibold uppercase tracking-[0.35em] text-indigo-500">
+
+                Pick Your Avatar
+
+            </h3>
+
+            <div class="mt-6 flex flex-wrap justify-center gap-4">
+
+                @for (avatar of avatars; track $index) {
+
+                    <button
+
+                        (click)="selectAvatar($index)"
+
+                        class="relative flex h-14 w-14 items-center justify-center rounded-full text-2xl transition-all duration-200"
+
+                        [ngClass]="[
+                            avatar.bg,
+                            selectedAvatar === $index
+                                ? 'scale-110 border-2 border-[#7B4DFF] shadow-md'
+                                : 'border-2 border-transparent hover:scale-105'
+                        ]">
+
+                        {{ avatar.emoji }}
+
+                    </button>
+
+                }
+
+            </div>
+
+            <div class="mt-4 flex justify-center gap-2">
+
+                @for (avatar of avatars; track $index) {
+
+                    <div
+
+                        class="h-2.5 w-2.5 rounded-full transition-all"
+
+                        [ngClass]="
+                            selectedAvatar === $index
+                                ? 'bg-[#7B4DFF]'
+                                : 'bg-slate-300'
+                        ">
+
+                    </div>
+
+                }
+
+            </div>
+
+            <hr class="my-8">
+
+            <!-- Name -->
+
+            <label class="text-sm font-medium text-slate-700">
+
+                Enter your name
+
+            </label>
+
+            <input
+
+                type="text"
+
+                [(ngModel)]="name"
+
+                placeholder="e.g. Emma"
+
+                class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100">
+
+            <!-- Class Code -->
+
+            <label class="mt-6 block text-sm font-medium text-slate-700">
+
+                Class code
+
+                <span class="font-normal text-slate-400">
+
+                    (optional)
+
+                </span>
+
+            </label>
+
+            <input
+
+                type="text"
+
+                [(ngModel)]="classCode"
+
+                placeholder="Ask your teacher for a code"
+
+                class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100">
+
+            <!-- Continue -->
+
+            <div class="mt-8">
+
+                <app-button
+
+                    [fullWidth]="true"
+
+                    styleClass="h-12 w-full rounded-2xl bg-[#6D47C4] text-white hover:bg-[#5B39A8]"
+
+                    (buttonClick)="continue()">
+
+                    Continue
+
+                    <i class="pi pi-arrow-right ml-2"></i>
+
+                </app-button>
+
+            </div>
+
+            <p class="mt-6 text-center text-sm text-slate-400">
+
+                No account needed — just jump in!
+
+            </p>
+
+        </app-card>
+
+    </div>
+
+</div>
