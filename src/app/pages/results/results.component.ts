@@ -44,13 +44,20 @@ export class ResultsPageComponent {
     return ageGroup === '7-9' || ageGroup === '10-12';
   }
 
-  retryIncorrectQuestions(): void {
-    if (!this.ageGroup() || this.wrongQuestions().length === 0) {
+  playAgain(): void {
+    if (!this.ageGroup()) {
       return;
     }
 
-    this.router.navigate(['/quiz', this.ageGroup()], {
-      state: { retryQuestions: this.wrongQuestions() }
+    this.router.navigate(['/quiz', this.ageGroup()]);
+  }
+
+  openLeaderboard(): void {
+    this.router.navigate(['/leaderboard'], {
+      state: {
+        ageGroup: this.ageGroup(),
+        quizResult: this.quizResult()
+      }
     });
   }
 

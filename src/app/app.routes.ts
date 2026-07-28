@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -30,6 +31,15 @@ export const routes: Routes = [
   {
     path: 'results/:ageGroup',
     loadComponent: () => import('./pages/results/results.component').then(m => m.ResultsPageComponent)
+  },
+  {
+    path: 'leaderboard',
+    loadComponent: () => import('./pages/leaderboard/leaderboard.component').then(m => m.LeaderboardComponent)
+  },
+  {
+    path: 'admin',
+    loadChildren: () => import('./features/admin/routes').then(m => m.ADMIN_ROUTES),
+    canActivate: [adminGuard]
   },
   {
     path: '**',
