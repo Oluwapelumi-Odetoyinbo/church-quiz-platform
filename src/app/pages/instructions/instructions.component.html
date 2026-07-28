@@ -1,0 +1,134 @@
+<div class="min-h-screen bg-[#F7F5FF] flex items-center justify-center p-5">
+
+    <app-card
+        styleClass="w-full max-w-6xl rounded-3xl shadow-xl">
+
+        <!-- Step -->
+
+        <p class="text-[10px] uppercase tracking-widest font-semibold text-[#7B4DFF]">
+
+            STEP 3 OF 3
+
+        </p>
+
+        <div class="mt-2 h-1 w-full rounded-full bg-gray-200">
+
+            <div class="h-full w-full rounded-full bg-[#7B4DFF]"></div>
+
+        </div>
+
+        <!-- Icon -->
+
+        <div class="mt-8 flex justify-center">
+
+            <div
+                class="flex h-16 w-16 items-center justify-center rounded-full bg-[#FFF2CC] text-3xl">
+
+                👍
+
+            </div>
+
+        </div>
+
+        <!-- Title -->
+
+        <h1 class="mt-5 text-center text-2xl font-bold text-[#17132D]">
+
+            Ready to start?
+
+        </h1>
+
+        <p class="mt-2 text-center text-sm text-gray-500">
+
+            Here's what to expect
+
+        </p>
+
+        <hr class="my-6">
+
+        <!-- Categories -->
+
+        <div class="flex flex-wrap justify-center gap-2">
+
+            @for(category of categories; track $index){
+
+                <span
+                    class="rounded-full bg-[#F5F1FF] px-3 py-1 text-xs font-medium text-[#7B4DFF]">
+
+                    {{category}}
+
+                </span>
+
+            }
+
+        </div>
+
+        <!-- Instructions -->
+
+        <div class="mt-8 space-y-4">
+
+            <div class="flex items-start gap-3">
+
+                <i class="pi pi-clock text-[#7B4DFF] mt-1"></i>
+
+                <p class="text-sm text-gray-700">
+
+                    10 questions, 5 minutes
+
+                </p>
+
+            </div>
+
+            <div class="flex items-start gap-3">
+
+                <i class="pi pi-chart-line text-[#7B4DFF] mt-1"></i>
+
+                <p class="text-sm text-gray-700">
+
+                    Difficulty: 3 Easy, 4 Medium, 3 Hard
+
+                </p>
+
+            </div>
+
+            <div class="flex items-start gap-3">
+
+                <i class="pi pi-shield text-[#7B4DFF] mt-1"></i>
+
+                <p class="text-sm text-gray-700">
+
+                    Your answers save automatically
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- Buttons -->
+
+        <div class="mt-10 flex items-center gap-3">
+
+            <button
+                (click)="back()"
+                class="text-sm font-medium text-[#7B4DFF]">
+
+                ← Back
+
+            </button>
+
+            <app-button
+    [fullWidth]="false"
+    styleClass="w-72 h-12 rounded-xl bg-[#6D47C4] text-white hover:bg-[#5A36B3]"
+    (buttonClick)="startQuiz()">
+
+    Start Quiz
+    <i class="pi pi-play ml-2"></i>
+
+</app-button>
+
+        </div>
+
+    </app-card>
+
+</div>

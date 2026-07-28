@@ -1,0 +1,17 @@
+<button
+  [type]="type"
+  [disabled]="disabled || loading"
+  (click)="onClick()"
+  class="inline-flex items-center justify-center gap-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+  [class.w-full]="fullWidth"
+  [ngClass]="styleClass">
+
+  <ng-container *ngIf="!loading; else loadingTemplate">
+    <ng-content></ng-content>
+  </ng-container>
+
+  <ng-template #loadingTemplate>
+    <app-loading-spinner [size]="20"></app-loading-spinner>
+  </ng-template>
+
+</button>
