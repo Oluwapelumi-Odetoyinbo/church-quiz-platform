@@ -49,18 +49,7 @@ export class QuizPageComponent {
   }
 
   private getInitialQuestions(): QuizQuestion[] {
-    const retryQuestions = this.getRetryQuestionsFromState();
-
-    if (retryQuestions.length > 0) {
-      return retryQuestions;
-    }
-
     return this.quizService.getQuestionsForAgeGroup(this.ageGroup());
-  }
-
-  private getRetryQuestionsFromState(): QuizQuestion[] {
-    const state = window.history.state as { retryQuestions?: QuizQuestion[] } | null;
-    return Array.isArray(state?.retryQuestions) ? state.retryQuestions : [];
   }
 
   updateAnswer(value: string): void {

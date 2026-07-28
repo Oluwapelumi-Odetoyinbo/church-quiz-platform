@@ -1,0 +1,14 @@
+
+    :host {
+      display: block;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #3c3c4b;
+      border-radius: 10px;
+    }
