@@ -1,19 +1,186 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
 /* PrimeNG Theme — must come before Tailwind so @import rules are first */
 @import "primeng/resources/themes/lara-light-indigo/theme.css";
 @import "primeng/resources/primeng.min.css";
 @import "primeicons/primeicons.css";
 
-/* Tailwind CSS */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Global Styles */
-body {
-  margin: 0;
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@layer base {
+  body {
+    margin: 0;
+    font-family: theme('fontFamily.sans');
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    @apply bg-surface text-slate-800;
+  }
+
+  h1, h2, h3 {
+    @apply text-brand-900 tracking-tight;
+  }
+}
+
+@layer components {
+  .page-shell {
+    @apply min-h-screen bg-surface px-6 py-8 lg:px-10 lg:py-10;
+  }
+
+  .page-enter {
+    animation: page-enter 0.35s ease-out both;
+  }
+
+  .page-container {
+    @apply mx-auto w-full max-w-6xl;
+  }
+
+  .page-container-narrow {
+    @apply mx-auto w-full max-w-3xl;
+  }
+
+  .page-container-wide {
+    @apply mx-auto w-full max-w-5xl;
+  }
+
+  .page-card {
+    @apply w-full rounded-card border border-slate-200 bg-surface-card shadow-card;
+  }
+
+  .page-brand {
+    @apply mb-6 flex items-center gap-2.5 text-brand-900;
+  }
+
+  .page-brand-title {
+    @apply text-sm font-semibold tracking-tight;
+  }
+
+  .page-header {
+    @apply mb-6 max-w-2xl;
+  }
+
+  .page-title {
+    @apply text-2xl font-semibold lg:text-3xl;
+  }
+
+  .page-subtitle {
+    @apply mt-1 text-sm text-slate-500 lg:text-base;
+  }
+
+  .page-actions {
+    @apply mt-8 flex items-center justify-between gap-4;
+  }
+
+  .page-footer-note {
+    @apply mt-4 text-xs text-slate-400;
+  }
+
+  .form-panel {
+    @apply rounded-lg border border-slate-200 bg-slate-50/50 p-5 lg:p-6;
+  }
+
+  .info-panel {
+    @apply rounded-lg border border-slate-200 bg-white p-5 lg:p-6;
+  }
+
+  .step-label {
+    @apply text-xs font-medium uppercase tracking-wide text-brand-500;
+  }
+
+  .step-bar {
+    @apply h-1 w-full overflow-hidden rounded-full bg-slate-200;
+  }
+
+  .step-bar-fill {
+    @apply h-full rounded-full bg-brand-600 transition-all duration-300;
+  }
+
+  .field-label {
+    @apply text-sm font-medium text-slate-700;
+  }
+
+  .field-input {
+    @apply mt-1.5 w-full rounded-input border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20;
+  }
+
+  .field-input-error {
+    @apply border-rose-300 focus:border-rose-400 focus:ring-rose-400/20;
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-medium text-brand-600;
+  }
+
+  .link-back {
+    @apply text-sm font-medium text-brand-600 transition hover:text-brand-700;
+  }
+
+  .tab-group {
+    @apply flex rounded-lg bg-slate-100 p-1;
+  }
+
+  .tab-item {
+    @apply flex-1 rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition;
+  }
+
+  .tab-item-active {
+    @apply bg-white text-brand-600 shadow-sm;
+  }
+
+  .selection-card {
+    @apply flex flex-col items-center justify-center rounded-lg border border-slate-200 bg-white p-4 transition-all duration-150 hover:border-slate-300 lg:p-5;
+  }
+
+  .selection-card-active {
+    @apply border-brand-600 bg-brand-50 ring-1 ring-brand-600/20;
+  }
+
+  .scroll-area {
+    @apply overflow-y-auto pr-1;
+    scrollbar-width: thin;
+    scrollbar-color: #CBD5E1 transparent;
+  }
+
+  .scroll-area::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scroll-area::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-slate-300;
+  }
+
+  .rank-gold {
+    @apply border-l-2 border-l-amber-400;
+  }
+
+  .rank-silver {
+    @apply border-l-2 border-l-slate-300;
+  }
+
+  .rank-bronze {
+    @apply border-l-2 border-l-orange-300;
+  }
+}
+
+@layer utilities {
+  .timer-warning {
+    @apply border-amber-200 bg-amber-50 text-amber-700;
+  }
+
+  .timer-critical {
+    @apply border-rose-200 bg-rose-50 text-rose-700;
+  }
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -1,208 +1,204 @@
+<div class="flex min-h-screen bg-[#F8F9FB]">
 
-      
-      <!-- DASHBOARD CONTAINER CONTAINER -->
-      <div class="w-full max-w-[1440px] bg-[#F8F7FA]  shadow-2xl flex overflow-hidden min-h-[850px] relative border border-[#5B3A8E]/10">
-        
-        <!-- FIXED LEFT SIDEBAR (nested inside container) -->
-        <aside class="w-[240px] bg-[#2C2C36] text-[#E2E2E8] flex flex-col z-30 shrink-0 border-r border-[#343442]">
-          
-          <!-- Logo Section -->
-          <div class="h-20 flex items-center px-6 gap-3 border-b border-[#343442]">
-            <div class="w-10 h-10 rounded-xl bg-[#5B3A8E] flex items-center justify-center shadow-md shadow-[#5b3a8e]/30 shrink-0">
-              <!-- Christian Cross SVG -->
-              <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="4" x2="12" y2="20"></line>
-                <line x1="8" y1="9" x2="16" y2="9"></line>
-              </svg>
-            </div>
-            <div>
-              <h1 class="text-sm font-bold tracking-tight text-white leading-none">Church Quiz</h1>
-              <span class="text-[11px] text-gray-400 font-semibold tracking-wider mt-1 block uppercase">Admin</span>
-            </div>
-          </div>
+  <!-- Sidebar -->
+  <aside class="flex w-[240px] shrink-0 flex-col bg-[#1E2030] text-slate-300">
 
-          <!-- Navigation Links -->
-          <nav class="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto custom-scrollbar">
-            <button
-              *ngFor="let item of navItems"
-              (click)="setActiveTab(item.id)"
-              [class]="'w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 group ' + 
-                (activeTab === item.id 
-                  ? 'bg-[#5B3A8E] text-white shadow-lg shadow-[#5B3A8E]/30' 
-                  : 'text-gray-400 hover:bg-[#343442] hover:text-white')"
-            >
-              <i [class]="item.icon + ' text-base ' + (activeTab === item.id ? 'text-white' : 'text-gray-400 group-hover:text-white')"></i>
-              <span>{{ item.label }}</span>
-            </button>
-          </nav>
+    <div class="flex h-[72px] items-center gap-3 border-b border-white/10 px-5">
+      <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-600">
+        <svg class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="12" y1="4" x2="12" y2="20"></line>
+          <line x1="8" y1="9" x2="16" y2="9"></line>
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-sm font-semibold leading-none text-white">Church Quiz</h1>
+        <span class="mt-1 block text-[10px] font-semibold uppercase tracking-widest text-slate-500">Admin</span>
+      </div>
+    </div>
 
-          <!-- Log Out Section (Near bottom, separated) -->
-          <div class="p-4 border-t border-[#343442]">
-            <button 
-              (click)="handleLogout()" 
-              class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold tracking-wide text-gray-400 hover:bg-[#343442] hover:text-white transition-all duration-200"
-            >
-              <i class="pi pi-sign-out text-base"></i>
-              <span>Log Out</span>
-            </button>
-          </div>
-        </aside>
+    <nav class="custom-scrollbar flex-1 space-y-1 overflow-y-auto px-3 py-5">
+      <button
+        *ngFor="let item of navItems"
+        type="button"
+        (click)="setActiveTab(item.id)"
+        class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors"
+        [ngClass]="activeTab === item.id
+          ? 'admin-nav-active shadow-sm'
+          : 'text-slate-400 hover:bg-white/5 hover:text-white'">
+        <i [class]="item.icon + ' text-sm'"></i>
+        <span>{{ item.label }}</span>
+      </button>
+    </nav>
 
-        <!-- MAIN APP CONTAINER -->
-        <div class="flex-1 flex flex-col min-h-full">
-          
-          <!-- TOP BAR -->
-          <header class="h-20 flex items-center justify-between px-8 sticky top-0 z-20">
-            
-            <!-- Search input on the left -->
-            <div class="relative w-80 max-w-xs sm:max-w-sm">
-              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                <i class="pi pi-search text-gray-400 text-sm"></i>
-              </span>
-              <input 
-                type="text" 
-                placeholder="Search students, leaders, questions..." 
-                class="w-full pl-10 pr-4 py-2.5 bg-white border border-[#E6E5EA] rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:border-[#5B3A8E] focus:ring-2 focus:ring-[#5B3A8E]/10 transition-all duration-200 text-gray-700"
-              />
-            </div>
+    <div class="border-t border-white/10 p-4">
+      <button
+        type="button"
+        (click)="handleLogout()"
+        class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-400 transition-colors hover:bg-white/5 hover:text-white">
+        <i class="pi pi-sign-out text-sm"></i>
+        <span>Log out</span>
+      </button>
+    </div>
+  </aside>
 
-            <!-- Admin profile on the right -->
-            <div class="flex items-center gap-3 cursor-pointer group">
-              <img 
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100" 
-                alt="Jonathan A." 
-                class="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm"
-              />
-              <span class="text-sm font-semibold text-gray-700 group-hover:text-[#5B3A8E] transition-all duration-200">Jonathan A.</span>
-            </div>
-          </header>
+  <!-- Main -->
+  <div class="flex min-h-screen min-w-0 flex-1 flex-col">
 
-          <!-- DASHBOARD CONTENT AREA -->
-          <main class="flex-1 p-8 space-y-8">
+    <!-- Top bar -->
+    <header class="flex h-[72px] shrink-0 items-center justify-between gap-6 border-b border-slate-200 bg-white px-6 lg:px-8">
 
-            <!-- ROW OF 4 METRIC CARDS -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div 
-                *ngFor="let card of metricCards" 
-                class="bg-white p-6 rounded-[20px] border border-[#E6E5EA]/70 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-center justify-between"
-              >
+      <div class="relative w-full max-w-md">
+        <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+          <i class="pi pi-search text-sm text-slate-400"></i>
+        </span>
+        <input
+          type="search"
+          placeholder="Search students, leaders, questions..."
+          class="field-input mt-0 w-full pl-10" />
+      </div>
+
+      <div class="flex shrink-0 cursor-pointer items-center gap-3">
+        <img
+          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100"
+          alt="Jonathan A."
+          class="h-9 w-9 rounded-full border-2 border-white object-cover shadow-sm" />
+        <span class="hidden text-sm font-semibold text-slate-700 sm:inline">Jonathan A.</span>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="flex-1 overflow-y-auto p-6 lg:p-8">
+
+      @if (activeTab === 'dashboard') {
+        <div class="space-y-6">
+          <!-- Metric cards -->
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div
+              *ngFor="let card of metricCards"
+              class="rounded-xl border border-slate-200/80 bg-white p-5 shadow-sm">
+              <div class="flex items-start justify-between gap-4">
                 <div>
-                  <h3 class="text-3xl font-extrabold text-[#2C2C36] tracking-tight leading-none">{{ card.value }}</h3>
-                  <span class="text-[12px] font-semibold text-slate-400 mt-2 block">{{ card.title }}</span>
+                  <p class="text-3xl font-bold tabular-nums tracking-tight text-[#1E2030]">{{ card.value }}</p>
+                  <p class="mt-2 text-sm font-medium text-slate-500">{{ card.title }}</p>
                 </div>
-                <div class="text-[#5B3A8E] shrink-0">
-                  <!-- Conditional rendering for icons -->
-                  <i *ngIf="card.icon.startsWith('pi')" [class]="card.icon + ' text-2xl text-[#5B3A8E]'"></i>
-                  
-                  <!-- Stacked cards SVG for Question Bank -->
-                  <svg *ngIf="card.icon === 'svg-cards'" class="w-6 h-6 text-[#5B3A8E]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <div class="admin-metric-icon shrink-0">
+                  <i *ngIf="card.icon.startsWith('pi')" [class]="card.icon + ' text-lg'"></i>
+                  <svg *ngIf="card.icon === 'svg-cards'" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="9" width="12" height="12" rx="2" ry="2"></rect>
                     <path d="M9 5h12a2 2 0 0 1 2 2v12"></path>
-                    <circle cx="9" cy="14" r="1" fill="currentColor"></circle>
-                    <path d="M9 11.5a1.5 1.5 0 0 1 1.5-1.5 1.5 1.5 0 0 1 1.5 1.5c0 .75-.5 1-1 1.5"></path>
                   </svg>
-
-                  <!-- Flag SVG for Flags -->
-                  <svg *ngIf="card.icon === 'svg-flag'" class="w-6 h-6 text-[#5B3A8E]" viewBox="0 0 24 24" fill="currentColor">
+                  <svg *ngIf="card.icon === 'svg-flag'" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M4 2v20h2v-8h9l1-2h6V4h-7l-1 2H6V2H4z"/>
                   </svg>
                 </div>
               </div>
             </div>
+          </div>
 
-            <!-- TWO COLUMN SECTION -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              
-              <!-- LEFT COLUMN: QUIZ ACTIVITY (WIDER, SPANS 2 COLUMNS) -->
-              <div class="lg:col-span-2 bg-white rounded-[20px] border border-[#E6E5EA]/70 shadow-sm p-6 flex flex-col justify-between relative overflow-hidden">
-                <div class="mb-4">
-                  <h3 class="text-sm font-bold text-gray-900">Quiz Activity (Last 30 Days)</h3>
-                </div>
+          <!-- Chart + activity -->
+          <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
 
-                <!-- Chart Container -->
-                <div class="relative w-full h-[250px] mt-4 flex items-end">
-                  
-                  <!-- Custom SVG Line Chart -->
-                  <svg viewBox="0 0 600 200" preserveAspectRatio="none" class="w-full h-full">
-                    <!-- Gradients -->
-                    <defs>
-                      <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stop-color="#5B3A8E" stop-opacity="0.15" />
-                        <stop offset="100%" stop-color="#5B3A8E" stop-opacity="0.00" />
-                      </linearGradient>
-                    </defs>
+            <div class="relative rounded-xl border border-slate-200/80 bg-white p-6 shadow-sm xl:col-span-2">
+              <h2 class="text-sm font-semibold text-[#1E2030]">Quiz activity (last 30 days)</h2>
 
-                    <!-- Chart Gridlines matching Y axis ticks (0, 200, 400, 600, 800) -->
-                    <line x1="40" y1="20" x2="560" y2="20" stroke="#F1F0F5" />
-                    <line x1="40" y1="60" x2="560" y2="60" stroke="#F1F0F5" />
-                    <line x1="40" y1="100" x2="560" y2="100" stroke="#F1F0F5" />
-                    <line x1="40" y1="140" x2="560" y2="140" stroke="#F1F0F5" />
-                    <line x1="40" y1="180" x2="560" y2="180" stroke="#E6E5EA" />
+              <div class="relative mt-6 h-[260px] w-full">
+                <svg viewBox="0 0 600 220" preserveAspectRatio="none" class="h-full w-full">
+                  <defs>
+                    <linearGradient id="adminChartGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#6D47C4" stop-opacity="0.14" />
+                      <stop offset="100%" stop-color="#6D47C4" stop-opacity="0" />
+                    </linearGradient>
+                  </defs>
 
-                    <!-- Y-Axis Labels -->
-                    <text x="30" y="24" text-anchor="end" class="text-[10px] font-bold fill-gray-400">800</text>
-                    <text x="30" y="64" text-anchor="end" class="text-[10px] font-bold fill-gray-400">600</text>
-                    <text x="30" y="104" text-anchor="end" class="text-[10px] font-bold fill-gray-400">400</text>
-                    <text x="30" y="144" text-anchor="end" class="text-[10px] font-bold fill-gray-400">200</text>
-                    <text x="30" y="184" text-anchor="end" class="text-[10px] font-bold fill-gray-400">0</text>
+                  <line x1="40" y1="20" x2="560" y2="20" stroke="#F1F3F5" />
+                  <line x1="40" y1="60" x2="560" y2="60" stroke="#F1F3F5" />
+                  <line x1="40" y1="100" x2="560" y2="100" stroke="#F1F3F5" />
+                  <line x1="40" y1="140" x2="560" y2="140" stroke="#F1F3F5" />
+                  <line x1="40" y1="180" x2="560" y2="180" stroke="#E2E8F0" />
 
-                    <!-- Gradient Shaded Fill Under the Line -->
-                    <path [attr.d]="fillPath" fill="url(#chartGradient)"></path>
+                  <text x="30" y="24" text-anchor="end" class="fill-slate-400 text-[10px] font-medium">800</text>
+                  <text x="30" y="64" text-anchor="end" class="fill-slate-400 text-[10px] font-medium">600</text>
+                  <text x="30" y="104" text-anchor="end" class="fill-slate-400 text-[10px] font-medium">400</text>
+                  <text x="30" y="144" text-anchor="end" class="fill-slate-400 text-[10px] font-medium">200</text>
+                  <text x="30" y="184" text-anchor="end" class="fill-slate-400 text-[10px] font-medium">0</text>
 
-                    <!-- Main Bezier Line -->
-                    <path [attr.d]="linePath" fill="none" stroke="#5B3A8E" stroke-width="2.5" stroke-linecap="round"></path>
+                  <path [attr.d]="fillPath" fill="url(#adminChartGradient)"></path>
+                  <path [attr.d]="linePath" fill="none" stroke="#6D47C4" stroke-width="2.5" stroke-linecap="round"></path>
 
-                    <!-- Interactive Data Points -->
-                    <circle *ngFor="let p of chartPoints" 
-                            [attr.cx]="p.x" 
-                            [attr.cy]="p.y" 
-                            r="4.5" 
-                            class="fill-white stroke-[#5B3A8E] stroke-[2.5] cursor-pointer hover:r-[6px] hover:stroke-[#4C3077] transition-all duration-200"
-                            (mouseenter)="showTooltip(p, $event)"
-                            (mouseleave)="hideTooltip()">
-                    </circle>
-                  </svg>
+                  <circle
+                    *ngFor="let p of chartPoints"
+                    [attr.cx]="p.x"
+                    [attr.cy]="p.y"
+                    r="4.5"
+                    class="cursor-pointer fill-white stroke-[#6D47C4] stroke-[2.5]"
+                    (mouseenter)="showTooltip(p)"
+                    (mouseleave)="hideTooltip()">
+                  </circle>
 
-                  <!-- Tooltip Popup -->
-                  <div *ngIf="tooltipVisible" 
-                       class="absolute bg-slate-900 text-white text-xs px-3 py-2 rounded-xl shadow-lg pointer-events-none transition-all duration-150 z-20 whitespace-nowrap"
-                       [style.left.px]="tooltipX"
-                       [style.top.px]="tooltipY">
-                    <div class="font-bold text-[#cdaaff]">{{ tooltipData?.label }}</div>
-                    <div>{{ tooltipData?.value }} Quizzes Completed</div>
-                  </div>
+                  <text
+                    *ngFor="let label of xAxisLabels; let i = index"
+                    [attr.x]="label.x"
+                    y="210"
+                    text-anchor="middle"
+                    class="fill-slate-400 text-[9px] font-medium"
+                    [attr.opacity]="i % 2 === 0 ? 1 : 0.7">
+                    {{ label.label }}
+                  </text>
+                </svg>
+
+                <div
+                  *ngIf="tooltipVisible"
+                  class="pointer-events-none absolute z-20 whitespace-nowrap rounded-lg bg-[#1E2030] px-3 py-2 text-xs text-white shadow-lg"
+                  [style.left.px]="tooltipX"
+                  [style.top.px]="tooltipY">
+                  <div class="font-medium text-brand-200">{{ tooltipData?.label }}</div>
+                  <div>{{ tooltipData?.value }} quizzes completed</div>
                 </div>
               </div>
-
-              <!-- RIGHT COLUMN: RECENT ACTIVITY -->
-              <div class="bg-white rounded-[20px] border border-[#E6E5EA]/70 shadow-sm p-6 flex flex-col justify-between">
-                <div class="mb-5">
-                  <h3 class="text-sm font-bold text-gray-900">Recent Activity</h3>
-                </div>
-
-                <!-- Activity List (Vertical Timeline styled matching mock) -->
-                <div class="flex-1 relative pl-6 space-y-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-[1px] before:bg-gray-100">
-                  <div *ngFor="let activity of recentActivities; let first = first" class="relative flex items-center justify-between group">
-                    <!-- Timeline circle dot -->
-                    <span [class]="'absolute -left-6 top-1.5 w-2.5 h-2.5 rounded-full ring-4 ring-white ' + (first ? 'bg-[#5B3A8E]' : 'bg-gray-300')"></span>
-                    
-                    <!-- Event content -->
-                    <div class="flex-1 pl-3">
-                      <h4 class="text-sm font-bold text-gray-800 leading-tight">{{ activity.title }}</h4>
-                      <span class="text-[11px] text-gray-400 mt-1 block font-semibold">{{ activity.time }}</span>
-                    </div>
-
-                    <!-- Icon box on the right -->
-                    <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
-                      <i [class]="activity.icon + ' text-xs text-slate-400'"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
             </div>
 
-          </main>
-        </div>
+            <div class="rounded-xl border border-slate-200/80 bg-white p-6 shadow-sm">
+              <h2 class="text-sm font-semibold text-[#1E2030]">Recent activity</h2>
 
-      </div>
+              <div class="relative mt-6 space-y-6 pl-4 before:absolute before:bottom-3 before:left-[5px] before:top-3 before:w-px before:bg-slate-200">
+                <div *ngFor="let activity of recentActivities; let first = first" class="relative flex items-start justify-between gap-3">
+                  <span
+                    class="absolute -left-4 top-1.5 h-2.5 w-2.5 rounded-full ring-4 ring-white"
+                    [ngClass]="first ? 'bg-brand-600' : 'bg-slate-300'">
+                  </span>
+
+                  <div class="min-w-0 flex-1 pl-2">
+                    <p class="text-sm font-semibold leading-snug text-slate-800">{{ activity.title }}</p>
+                    <p class="mt-1 text-xs text-slate-400">{{ activity.time }}</p>
+                  </div>
+
+                  <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100">
+                    <i [class]="activity.icon + ' text-xs text-slate-500'"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      } @else {
+        <div class="rounded-xl border border-slate-200/80 bg-white p-10 shadow-sm">
+          <div class="max-w-lg">
+            <p class="text-xs font-medium uppercase tracking-wide text-brand-500">{{ getActiveTabLabel() }}</p>
+            <h2 class="mt-2 text-2xl font-semibold text-[#1E2030]">Coming soon</h2>
+            <p class="mt-2 text-sm leading-relaxed text-slate-500">
+              This section is under development. Use the dashboard to monitor quiz activity and recent updates.
+            </p>
+            <button
+              type="button"
+              (click)="setActiveTab('dashboard')"
+              class="mt-6 text-sm font-medium text-brand-600 hover:text-brand-700">
+              ← Back to dashboard
+            </button>
+          </div>
+        </div>
+      }
+
+    </main>
+  </div>
+</div>

@@ -4,13 +4,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { CardComponent } from '../../shared/components/card/card.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
+import { ScoreRingComponent } from '../../shared/components/score-ring/score-ring.component';
 import type { QuizAgeGroup, QuizQuestion } from '../../core/models/quiz-question.model';
 import type { QuizAttemptResult, QuizQuestionReview } from '../../core/models/quiz-result.model';
 
 @Component({
   selector: 'app-results-page',
   standalone: true,
-  imports: [CardComponent, ButtonComponent, NgClass],
+  imports: [CardComponent, ButtonComponent, ScoreRingComponent, NgClass],
   templateUrl: './results.component.html'
 })
 export class ResultsPageComponent {
@@ -30,6 +31,16 @@ export class ResultsPageComponent {
   readonly correctCount = computed(() => this.quizResult()?.correctCount ?? this.reviewedQuestions().filter((item) => item.isCorrect).length);
 
   readonly totalCount = computed(() => this.quizResult()?.totalCount ?? this.reviewedQuestions().length);
+
+  readonly scorePercent = computed(() => {
+    const total = this.totalCount();
+
+    if (total === 0) {
+      return 0;
+    }
+
+    return Math.round((this.correctCount() / total) * 100);
+  });
 
   readonly isKidsLayout = computed(() => this.isKidsAgeGroup(this.ageGroup()));
 
@@ -94,12 +105,12 @@ export class ResultsPageComponent {
 
     const percentage = (this.correctCount() / total) * 100;
 
-    if (percentage === 100) return 'Perfect Score! 🎉';
-    if (percentage >= 90) return 'Outstanding!';
-    if (percentage >= 75) return 'Great Job!';
-    if (percentage >= 60) return 'Well Done!';
-    if (percentage >= 40) return 'Keep Practicing!';
-    return "Don't Give Up!";
+    if (percentage === 100) return 'Perfect score';
+    if (percentage >= 90) return 'Outstanding';
+    if (percentage >= 75) return 'Great job';
+    if (percentage >= 60) return 'Well done';
+    if (percentage >= 40) return 'Keep practicing';
+    return "Don't give up";
   });
 
   readonly resultSubtitle = computed(() => {

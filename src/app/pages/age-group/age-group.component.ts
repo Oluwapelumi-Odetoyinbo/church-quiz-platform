@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 
 import { CardComponent } from '../../shared/components/card/card.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
+import { StepProgressComponent } from '../../shared/components/step-progress/step-progress.component';
 
 @Component({
   selector: 'app-age-group-page',
@@ -14,7 +15,8 @@ import { ButtonComponent } from '../../shared/components/button/button.component
   imports: [
     CommonModule,
     CardComponent,
-    ButtonComponent
+    ButtonComponent,
+    StepProgressComponent
   ],
   templateUrl: 'age-group.component.html'
 })

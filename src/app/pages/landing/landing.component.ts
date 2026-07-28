@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 
 import { CardComponent } from '../../shared/components/card/card.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
+import { AppLogoComponent } from '../../shared/components/app-logo/app-logo.component';
+import { StepProgressComponent } from '../../shared/components/step-progress/step-progress.component';
 
 @Component({
   selector: 'app-details',
@@ -13,7 +15,9 @@ import { ButtonComponent } from '../../shared/components/button/button.component
     CommonModule,
     FormsModule,
     CardComponent,
-    ButtonComponent
+    ButtonComponent,
+    AppLogoComponent,
+    StepProgressComponent
   ],
   templateUrl: 'landing.component.html'
 })
@@ -22,6 +26,8 @@ export class LandingPageComponent {
   constructor(private router: Router) {}
 
   name = '';
+
+  nameTouched = false;
 
   classCode = '';
 

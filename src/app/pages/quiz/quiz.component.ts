@@ -1,20 +1,27 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import type { QuizAgeGroup, QuizQuestion } from '../../core/models/quiz-question.model';
 import type { QuizAttemptResult, QuizQuestionReview } from '../../core/models/quiz-result.model';
+import { AppLogoComponent } from '../../shared/components/app-logo/app-logo.component';
+import { ButtonComponent } from '../../shared/components/button/button.component';
 import { QuizService } from './quiz.service';
 
 @Component({
   selector: 'app-quiz-page',
   standalone: true,
-  imports: [],
+  imports: [ButtonComponent, AppLogoComponent, NgClass],
   templateUrl: './quiz.component.html'
 })
-export class QuizPageComponent {
+export class QuizPageComponent implements OnInit, OnDestroy {
+  private static readonly SECONDS_PER_QUESTION = 30;
+
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly quizService = inject(QuizService);
+
+  private timerIntervalId: ReturnType<typeof setInterval> | null = null;
 
   readonly ageGroup = signal<QuizAgeGroup | null>(this.route.snapshot.paramMap.get('ageGroup') as QuizAgeGroup | null);
 
@@ -24,11 +31,25 @@ export class QuizPageComponent {
 
   readonly answer = signal('');
 
-  readonly timerSeconds = signal(60);
+  readonly timerSeconds = signal(QuizPageComponent.SECONDS_PER_QUESTION);
 
   readonly reviewedQuestions = signal<QuizQuestionReview[]>([]);
 
   readonly timerLabel = computed(() => this.formatTime(this.timerSeconds()));
+
+  readonly timerClass = computed(() => {
+    const seconds = this.timerSeconds();
+
+    if (seconds <= 5) {
+      return 'timer-critical border';
+    }
+
+    if (seconds <= 10) {
+      return 'timer-warning border';
+    }
+
+    return 'border-slate-200 bg-white text-slate-700';
+  });
 
   readonly currentQuestion = computed<QuizQuestion | null>(() => {
     return this.questions()[this.currentIndex()] ?? null;
@@ -41,11 +62,14 @@ export class QuizPageComponent {
     return totalQuestions > 0 && this.currentIndex() === totalQuestions - 1;
   });
 
-  constructor() {
-    effect(() => {
-      this.currentIndex.set(0);
-      this.answer.set('');
-    });
+  ngOnInit(): void {
+    if (this.currentQuestion()) {
+      this.startQuestionTimer();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.clearQuestionTimer();
   }
 
   private getInitialQuestions(): QuizQuestion[] {
@@ -76,6 +100,8 @@ export class QuizPageComponent {
   }
 
   nextQuestion(): void {
+    this.clearQuestionTimer();
+
     const ageGroup = this.ageGroup();
     const currentQuestion = this.currentQuestion();
     const totalQuestions = this.totalQuestions();
@@ -91,6 +117,7 @@ export class QuizPageComponent {
     if (!this.isLastQuestion()) {
       this.currentIndex.update((currentIndex) => currentIndex + 1);
       this.answer.set('');
+      this.startQuestionTimer();
       return;
     }
 
@@ -102,6 +129,30 @@ export class QuizPageComponent {
     };
 
     this.router.navigate(['/results', ageGroup], { state: { quizResult: result } });
+  }
+
+  private startQuestionTimer(): void {
+    this.clearQuestionTimer();
+    this.timerSeconds.set(QuizPageComponent.SECONDS_PER_QUESTION);
+
+    this.timerIntervalId = setInterval(() => {
+      const remaining = this.timerSeconds() - 1;
+
+      if (remaining <= 0) {
+        this.timerSeconds.set(0);
+        this.nextQuestion();
+        return;
+      }
+
+      this.timerSeconds.set(remaining);
+    }, 1000);
+  }
+
+  private clearQuestionTimer(): void {
+    if (this.timerIntervalId !== null) {
+      clearInterval(this.timerIntervalId);
+      this.timerIntervalId = null;
+    }
   }
 
   private buildReview(question: QuizQuestion, userAnswer: string): QuizQuestionReview {

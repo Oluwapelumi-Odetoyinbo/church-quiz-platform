@@ -11,6 +11,6 @@ export class LoadingSpinnerComponent {
 
   @Input() size = 24;
 
-  @Input() color = 'border-violet-600';
+  @Input() color = 'border-brand-600';
 
 }

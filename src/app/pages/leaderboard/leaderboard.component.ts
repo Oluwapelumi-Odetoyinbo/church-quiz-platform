@@ -3,6 +3,7 @@ import { Component, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { CardComponent } from '../../shared/components/card/card.component';
+import { AppLogoComponent } from '../../shared/components/app-logo/app-logo.component';
 
 interface LeaderboardPlayer {
   rank: number;
@@ -15,7 +16,7 @@ interface LeaderboardPlayer {
 @Component({
   selector: 'app-leaderboard',
   standalone: true,
-  imports: [CommonModule, CardComponent],
+  imports: [CommonModule, CardComponent, AppLogoComponent],
   templateUrl: './leaderboard.component.html'
 })
 export class LeaderboardComponent {

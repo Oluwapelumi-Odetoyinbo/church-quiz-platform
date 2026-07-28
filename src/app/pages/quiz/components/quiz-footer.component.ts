@@ -10,7 +10,7 @@ import { ButtonComponent } from '../../../shared/components/button/button.compon
     <div class="flex items-center justify-end gap-3">
       <app-button
         [disabled]="disabled"
-        styleClass="rounded-full bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500"
+        size="lg"
         (buttonClick)="next.emit()">
         Next
         <i class="pi pi-arrow-right"></i>

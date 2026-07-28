@@ -1,111 +1,36 @@
-<div class="min-h-screen bg-[#F7F5FF] flex items-center justify-center p-5">
+<div class="page-shell">
+  <div class="page-container page-enter">
+    <app-card>
+      <app-step-progress [current]="2" [total]="3"></app-step-progress>
 
-    <app-card
-        styleClass="w-full max-w-6xl rounded-3xl shadow-xl">
-
-        <!-- Step -->
-
-        <p
-            class="text-[10px] uppercase tracking-widest text-[#7B4DFF] font-semibold">
-
-            Step 2 of 3
-
+      <div class="page-header mt-5">
+        <h1 class="page-title">How old are you?</h1>
+        <p class="page-subtitle">
+          Age helps us pick the right questions for you.
         </p>
+      </div>
 
-        <div
-            class="w-full h-1 bg-gray-200 rounded-full mt-2 overflow-hidden">
+      <div class="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        @for (group of ageGroups; track $index) {
+          <button
+            type="button"
+            (click)="selectAge($index)"
+            class="selection-card"
+            [class.selection-card-active]="selectedAge === $index">
+            <div class="text-2xl">{{ group.icon }}</div>
+            <h2 class="mt-2 text-base font-semibold">{{ group.age }}</h2>
+            <p class="mt-0.5 text-xs uppercase tracking-wide text-slate-400">{{ group.label }}</p>
+          </button>
+        }
+      </div>
 
-            <div
-                class="w-2/3 h-full bg-[#7B4DFF] rounded-full">
-
-            </div>
-
-        </div>
-
-        <!-- Title -->
-
-        <h1
-            class="mt-6 text-2xl font-bold text-[#17132D]">
-
-            How old are you?
-
-        </h1>
-
-        <p
-            class="text-gray-500 text-sm mt-1">
-
-            Age helps us pick the right questions for you.
-
-        </p>
-
-        <!-- Cards -->
-
-        <div class="grid grid-cols-2 gap-4 mt-8">
-
-            @for(group of ageGroups; track $index){
-
-                <button
-
-                    (click)="selectAge($index)"
-
-                    class="rounded-2xl border-2 p-5 transition-all duration-200 flex flex-col items-center justify-center"
-
-                    [ngClass]="selectedAge === $index
-                    ? 'border-[#7B4DFF] bg-[#F4EEFF]'
-                    : 'border-gray-200 bg-white hover:border-[#7B4DFF]'">
-
-                    <div class="text-3xl">
-
-                        {{group.icon}}
-
-                    </div>
-
-                    <h2
-                        class="mt-3 text-lg font-bold text-[#17132D]">
-
-                        {{group.age}}
-
-                    </h2>
-
-                    <p
-                        class="text-xs tracking-widest text-gray-400 uppercase mt-1">
-
-                        {{group.label}}
-
-                    </p>
-
-                </button>
-
-            }
-
-        </div>
-
-        <!-- Buttons -->
-
-        <div class="flex items-center gap-3 mt-8">
-
-            <button
-
-                (click)="goBack()"
-
-                class="text-sm text-[#7B4DFF] font-medium">
-
-                ← Back
-
-            </button>
-
-            <app-button
-    [fullWidth]="false"
-    styleClass="w-72 h-12 rounded-xl bg-[#6D47C4] text-white hover:bg-[#5A36B3]"
-    (buttonClick)="continue()">
-
-    Continue
-    <i class="pi pi-arrow-right ml-2"></i>
-
-</app-button>
-
-        </div>
-
+      <div class="page-actions">
+        <button type="button" (click)="goBack()" class="link-back">← Back</button>
+        <app-button size="lg" (buttonClick)="continue()">
+          Continue
+          <i class="pi pi-arrow-right text-xs"></i>
+        </app-button>
+      </div>
     </app-card>
-
+  </div>
 </div>

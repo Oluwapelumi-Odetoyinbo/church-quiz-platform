@@ -1,134 +1,64 @@
-<div class="min-h-screen bg-[#F7F5FF] flex items-center justify-center p-5">
+<div class="page-shell">
+  <div class="page-container page-enter">
+    <app-card>
+      <app-step-progress [current]="3" [total]="3"></app-step-progress>
 
-    <app-card
-        styleClass="w-full max-w-6xl rounded-3xl shadow-xl">
-
-        <!-- Step -->
-
-        <p class="text-[10px] uppercase tracking-widest font-semibold text-[#7B4DFF]">
-
-            STEP 3 OF 3
-
-        </p>
-
-        <div class="mt-2 h-1 w-full rounded-full bg-gray-200">
-
-            <div class="h-full w-full rounded-full bg-[#7B4DFF]"></div>
-
-        </div>
-
-        <!-- Icon -->
-
-        <div class="mt-8 flex justify-center">
-
-            <div
-                class="flex h-16 w-16 items-center justify-center rounded-full bg-[#FFF2CC] text-3xl">
-
-                👍
-
+      <div class="mt-8 grid gap-8 lg:grid-cols-[1fr_380px] lg:items-start">
+        <div>
+          <div class="flex items-center gap-3">
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-2xl">
+              👍
             </div>
+            <div>
+              <h1 class="page-title !text-xl lg:!text-2xl">Ready to start?</h1>
+              <p class="page-subtitle">Age group {{ ageGroup }}</p>
+            </div>
+          </div>
 
-        </div>
+          <p class="mt-6 max-w-xl text-sm leading-relaxed text-slate-600 lg:text-base">
+            You'll answer 10 questions across Bible basics, geography, and mental health topics.
+            Review your answers at the end and see how you rank on the leaderboard.
+          </p>
 
-        <!-- Title -->
-
-        <h1 class="mt-5 text-center text-2xl font-bold text-[#17132D]">
-
-            Ready to start?
-
-        </h1>
-
-        <p class="mt-2 text-center text-sm text-gray-500">
-
-            Here's what to expect
-
-        </p>
-
-        <hr class="my-6">
-
-        <!-- Categories -->
-
-        <div class="flex flex-wrap justify-center gap-2">
-
-            @for(category of categories; track $index){
-
-                <span
-                    class="rounded-full bg-[#F5F1FF] px-3 py-1 text-xs font-medium text-[#7B4DFF]">
-
-                    {{category}}
-
-                </span>
-
+          <div class="mt-6 flex flex-wrap gap-2">
+            @for (category of categories; track $index) {
+              <span class="chip">{{ category }}</span>
             }
-
+          </div>
         </div>
 
-        <!-- Instructions -->
-
-        <div class="mt-8 space-y-4">
-
-            <div class="flex items-start gap-3">
-
-                <i class="pi pi-clock text-[#7B4DFF] mt-1"></i>
-
-                <p class="text-sm text-gray-700">
-
-                    10 questions, 5 minutes
-
-                </p>
-
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
+            <i class="pi pi-clock mt-0.5 text-sm text-brand-500"></i>
+            <div>
+              <p class="text-sm font-medium text-slate-700">10 questions · 30 sec each</p>
+              <p class="text-xs text-slate-400">About 5 minutes total</p>
             </div>
-
-            <div class="flex items-start gap-3">
-
-                <i class="pi pi-chart-line text-[#7B4DFF] mt-1"></i>
-
-                <p class="text-sm text-gray-700">
-
-                    Difficulty: 3 Easy, 4 Medium, 3 Hard
-
-                </p>
-
+          </li>
+          <li class="flex items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
+            <i class="pi pi-chart-line mt-0.5 text-sm text-brand-500"></i>
+            <div>
+              <p class="text-sm font-medium text-slate-700">Mixed difficulty</p>
+              <p class="text-xs text-slate-400">3 Easy, 4 Medium, 3 Hard</p>
             </div>
-
-            <div class="flex items-start gap-3">
-
-                <i class="pi pi-shield text-[#7B4DFF] mt-1"></i>
-
-                <p class="text-sm text-gray-700">
-
-                    Your answers save automatically
-
-                </p>
-
+          </li>
+          <li class="flex items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
+            <i class="pi pi-shield mt-0.5 text-sm text-brand-500"></i>
+            <div>
+              <p class="text-sm font-medium text-slate-700">Auto-save enabled</p>
+              <p class="text-xs text-slate-400">Your answers are saved as you go</p>
             </div>
+          </li>
+        </ul>
+      </div>
 
-        </div>
-
-        <!-- Buttons -->
-
-        <div class="mt-10 flex items-center gap-3">
-
-            <button
-                (click)="back()"
-                class="text-sm font-medium text-[#7B4DFF]">
-
-                ← Back
-
-            </button>
-
-            <app-button
-    [fullWidth]="false"
-    styleClass="w-72 h-12 rounded-xl bg-[#6D47C4] text-white hover:bg-[#5A36B3]"
-    (buttonClick)="startQuiz()">
-
-    Start Quiz
-    <i class="pi pi-play ml-2"></i>
-
-</app-button>
-
-        </div>
-
+      <div class="page-actions">
+        <button type="button" (click)="back()" class="link-back">← Back</button>
+        <app-button size="lg" (buttonClick)="startQuiz()">
+          Start Quiz
+          <i class="pi pi-play text-xs"></i>
+        </app-button>
+      </div>
     </app-card>
-
+  </div>
 </div>
