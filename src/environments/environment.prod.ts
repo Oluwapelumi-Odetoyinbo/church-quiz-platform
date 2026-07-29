@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://api.church-quiz-platform.com/api'
+  apiBaseUrl: 'https://church-quiz-api-production.up.railway.app'
 };

@@ -1,204 +1,494 @@
-<div class="flex min-h-screen bg-[#F8F9FB]">
-
-  <!-- Sidebar -->
-  <aside class="flex w-[240px] shrink-0 flex-col bg-[#1E2030] text-slate-300">
-
-    <div class="flex h-[72px] items-center gap-3 border-b border-white/10 px-5">
-      <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-600">
-        <svg class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <line x1="12" y1="4" x2="12" y2="20"></line>
-          <line x1="8" y1="9" x2="16" y2="9"></line>
-        </svg>
-      </div>
-      <div>
-        <h1 class="text-sm font-semibold leading-none text-white">Church Quiz</h1>
-        <span class="mt-1 block text-[10px] font-semibold uppercase tracking-widest text-slate-500">Admin</span>
-      </div>
-    </div>
-
-    <nav class="custom-scrollbar flex-1 space-y-1 overflow-y-auto px-3 py-5">
-      <button
-        *ngFor="let item of navItems"
-        type="button"
-        (click)="setActiveTab(item.id)"
-        class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors"
-        [ngClass]="activeTab === item.id
-          ? 'admin-nav-active shadow-sm'
-          : 'text-slate-400 hover:bg-white/5 hover:text-white'">
-        <i [class]="item.icon + ' text-sm'"></i>
-        <span>{{ item.label }}</span>
-      </button>
-    </nav>
-
-    <div class="border-t border-white/10 p-4">
-      <button
-        type="button"
-        (click)="handleLogout()"
-        class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-400 transition-colors hover:bg-white/5 hover:text-white">
-        <i class="pi pi-sign-out text-sm"></i>
-        <span>Log out</span>
-      </button>
-    </div>
-  </aside>
-
-  <!-- Main -->
-  <div class="flex min-h-screen min-w-0 flex-1 flex-col">
-
-    <!-- Top bar -->
-    <header class="flex h-[72px] shrink-0 items-center justify-between gap-6 border-b border-slate-200 bg-white px-6 lg:px-8">
-
-      <div class="relative w-full max-w-md">
-        <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-          <i class="pi pi-search text-sm text-slate-400"></i>
-        </span>
-        <input
-          type="search"
-          placeholder="Search students, leaders, questions..."
-          class="field-input mt-0 w-full pl-10" />
-      </div>
-
-      <div class="flex shrink-0 cursor-pointer items-center gap-3">
-        <img
-          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100"
-          alt="Jonathan A."
-          class="h-9 w-9 rounded-full border-2 border-white object-cover shadow-sm" />
-        <span class="hidden text-sm font-semibold text-slate-700 sm:inline">Jonathan A.</span>
-      </div>
-    </header>
-
-    <!-- Content -->
-    <main class="flex-1 overflow-y-auto p-6 lg:p-8">
-
-      @if (activeTab === 'dashboard') {
-        <div class="space-y-6">
-          <!-- Metric cards -->
-          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <div
-              *ngFor="let card of metricCards"
-              class="rounded-xl border border-slate-200/80 bg-white p-5 shadow-sm">
-              <div class="flex items-start justify-between gap-4">
-                <div>
-                  <p class="text-3xl font-bold tabular-nums tracking-tight text-[#1E2030]">{{ card.value }}</p>
-                  <p class="mt-2 text-sm font-medium text-slate-500">{{ card.title }}</p>
-                </div>
-                <div class="admin-metric-icon shrink-0">
-                  <i *ngIf="card.icon.startsWith('pi')" [class]="card.icon + ' text-lg'"></i>
-                  <svg *ngIf="card.icon === 'svg-cards'" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="9" width="12" height="12" rx="2" ry="2"></rect>
-                    <path d="M9 5h12a2 2 0 0 1 2 2v12"></path>
-                  </svg>
-                  <svg *ngIf="card.icon === 'svg-flag'" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M4 2v20h2v-8h9l1-2h6V4h-7l-1 2H6V2H4z"/>
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Chart + activity -->
-          <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
-
-            <div class="relative rounded-xl border border-slate-200/80 bg-white p-6 shadow-sm xl:col-span-2">
-              <h2 class="text-sm font-semibold text-[#1E2030]">Quiz activity (last 30 days)</h2>
-
-              <div class="relative mt-6 h-[260px] w-full">
-                <svg viewBox="0 0 600 220" preserveAspectRatio="none" class="h-full w-full">
-                  <defs>
-                    <linearGradient id="adminChartGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stop-color="#6D47C4" stop-opacity="0.14" />
-                      <stop offset="100%" stop-color="#6D47C4" stop-opacity="0" />
-                    </linearGradient>
-                  </defs>
-
-                  <line x1="40" y1="20" x2="560" y2="20" stroke="#F1F3F5" />
-                  <line x1="40" y1="60" x2="560" y2="60" stroke="#F1F3F5" />
-                  <line x1="40" y1="100" x2="560" y2="100" stroke="#F1F3F5" />
-                  <line x1="40" y1="140" x2="560" y2="140" stroke="#F1F3F5" />
-                  <line x1="40" y1="180" x2="560" y2="180" stroke="#E2E8F0" />
-
-                  <text x="30" y="24" text-anchor="end" class="fill-slate-400 text-[10px] font-medium">800</text>
-                  <text x="30" y="64" text-anchor="end" class="fill-slate-400 text-[10px] font-medium">600</text>
-                  <text x="30" y="104" text-anchor="end" class="fill-slate-400 text-[10px] font-medium">400</text>
-                  <text x="30" y="144" text-anchor="end" class="fill-slate-400 text-[10px] font-medium">200</text>
-                  <text x="30" y="184" text-anchor="end" class="fill-slate-400 text-[10px] font-medium">0</text>
-
-                  <path [attr.d]="fillPath" fill="url(#adminChartGradient)"></path>
-                  <path [attr.d]="linePath" fill="none" stroke="#6D47C4" stroke-width="2.5" stroke-linecap="round"></path>
-
-                  <circle
-                    *ngFor="let p of chartPoints"
-                    [attr.cx]="p.x"
-                    [attr.cy]="p.y"
-                    r="4.5"
-                    class="cursor-pointer fill-white stroke-[#6D47C4] stroke-[2.5]"
-                    (mouseenter)="showTooltip(p)"
-                    (mouseleave)="hideTooltip()">
-                  </circle>
-
-                  <text
-                    *ngFor="let label of xAxisLabels; let i = index"
-                    [attr.x]="label.x"
-                    y="210"
-                    text-anchor="middle"
-                    class="fill-slate-400 text-[9px] font-medium"
-                    [attr.opacity]="i % 2 === 0 ? 1 : 0.7">
-                    {{ label.label }}
-                  </text>
-                </svg>
-
-                <div
-                  *ngIf="tooltipVisible"
-                  class="pointer-events-none absolute z-20 whitespace-nowrap rounded-lg bg-[#1E2030] px-3 py-2 text-xs text-white shadow-lg"
-                  [style.left.px]="tooltipX"
-                  [style.top.px]="tooltipY">
-                  <div class="font-medium text-brand-200">{{ tooltipData?.label }}</div>
-                  <div>{{ tooltipData?.value }} quizzes completed</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="rounded-xl border border-slate-200/80 bg-white p-6 shadow-sm">
-              <h2 class="text-sm font-semibold text-[#1E2030]">Recent activity</h2>
-
-              <div class="relative mt-6 space-y-6 pl-4 before:absolute before:bottom-3 before:left-[5px] before:top-3 before:w-px before:bg-slate-200">
-                <div *ngFor="let activity of recentActivities; let first = first" class="relative flex items-start justify-between gap-3">
-                  <span
-                    class="absolute -left-4 top-1.5 h-2.5 w-2.5 rounded-full ring-4 ring-white"
-                    [ngClass]="first ? 'bg-brand-600' : 'bg-slate-300'">
-                  </span>
-
-                  <div class="min-w-0 flex-1 pl-2">
-                    <p class="text-sm font-semibold leading-snug text-slate-800">{{ activity.title }}</p>
-                    <p class="mt-1 text-xs text-slate-400">{{ activity.time }}</p>
-                  </div>
-
-                  <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100">
-                    <i [class]="activity.icon + ' text-xs text-slate-500'"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
+@if (showLogin) {
+  <div class="flex min-h-screen items-center justify-center bg-[#F8F9FB] px-4">
+    <div class="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div class="mb-6 flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600">
+          <svg class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="12" y1="4" x2="12" y2="20"></line>
+            <line x1="8" y1="9" x2="16" y2="9"></line>
+          </svg>
         </div>
-      } @else {
-        <div class="rounded-xl border border-slate-200/80 bg-white p-10 shadow-sm">
-          <div class="max-w-lg">
-            <p class="text-xs font-medium uppercase tracking-wide text-brand-500">{{ getActiveTabLabel() }}</p>
-            <h2 class="mt-2 text-2xl font-semibold text-[#1E2030]">Coming soon</h2>
-            <p class="mt-2 text-sm leading-relaxed text-slate-500">
-              This section is under development. Use the dashboard to monitor quiz activity and recent updates.
-            </p>
-            <button
-              type="button"
-              (click)="setActiveTab('dashboard')"
-              class="mt-6 text-sm font-medium text-brand-600 hover:text-brand-700">
-              ← Back to dashboard
-            </button>
-          </div>
+        <div>
+          <h1 class="text-xl font-semibold text-[#1E2030]">
+            {{ needsSetup ? 'Create admin account' : 'Admin sign-in' }}
+          </h1>
+          <p class="text-sm text-slate-500">Church Quiz staff portal</p>
         </div>
+      </div>
+
+      @if (needsSetup) {
+        <p class="mb-4 rounded-lg border border-brand-100 bg-brand-50 px-3 py-2 text-sm text-brand-700">
+          No admin exists yet. Create the first account to get started.
+        </p>
       }
 
-    </main>
+      @if (error) {
+        <div class="mb-4 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">{{ error }}</div>
+      }
+
+      @if (authLoading && !authEmail) {
+        <div class="flex justify-center py-8">
+          <app-loading-spinner [size]="32"></app-loading-spinner>
+        </div>
+      } @else {
+        <label class="field-label" for="admin-email">Email</label>
+        <input
+          id="admin-email"
+          type="email"
+          autocomplete="username"
+          class="field-input"
+          [(ngModel)]="authEmail"
+          placeholder="admin@church.org" />
+
+        @if (needsSetup) {
+          <label class="field-label mt-4 block" for="admin-display-name">Display name (optional)</label>
+          <input
+            id="admin-display-name"
+            type="text"
+            class="field-input"
+            [(ngModel)]="authDisplayName"
+            placeholder="Church Admin" />
+        }
+
+        <label class="field-label mt-4 block" for="admin-password">Password</label>
+        <input
+          id="admin-password"
+          type="password"
+          autocomplete="{{ needsSetup ? 'new-password' : 'current-password' }}"
+          class="field-input"
+          [(ngModel)]="authPassword"
+          placeholder="At least 8 characters"
+          (keyup.enter)="submitAuth()" />
+
+        <div class="mt-6">
+          <app-button
+            [fullWidth]="true"
+            size="lg"
+            [loading]="authLoading"
+            (buttonClick)="submitAuth()">
+            {{ needsSetup ? 'Create admin' : 'Sign in' }}
+          </app-button>
+        </div>
+      }
+    </div>
   </div>
-</div>
+} @else {
+  <div class="flex min-h-screen bg-[#F8F9FB]">
+    <aside class="flex w-[240px] shrink-0 flex-col bg-[#1E2030] text-slate-300">
+      <div class="flex h-[72px] items-center gap-3 border-b border-white/10 px-5">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-600">
+          <svg class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="12" y1="4" x2="12" y2="20"></line>
+            <line x1="8" y1="9" x2="16" y2="9"></line>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-sm font-semibold leading-none text-white">Church Quiz</h1>
+          <span class="mt-1 block text-[10px] font-semibold uppercase tracking-widest text-slate-500">Admin</span>
+        </div>
+      </div>
+
+      <nav class="custom-scrollbar flex-1 space-y-1 overflow-y-auto px-3 py-5">
+        <button
+          *ngFor="let item of navItems"
+          type="button"
+          (click)="setActiveTab(item.id)"
+          class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors"
+          [ngClass]="activeTab === item.id ? 'admin-nav-active shadow-sm' : 'text-slate-400 hover:bg-white/5 hover:text-white'">
+          <i [class]="item.icon + ' text-sm'"></i>
+          <span>{{ item.label }}</span>
+        </button>
+      </nav>
+
+      <div class="border-t border-white/10 p-4">
+        <button
+          type="button"
+          (click)="handleLogout()"
+          class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-400 transition-colors hover:bg-white/5 hover:text-white">
+          <i class="pi pi-sign-out text-sm"></i>
+          <span>Log out</span>
+        </button>
+      </div>
+    </aside>
+
+    <div class="flex min-h-screen min-w-0 flex-1 flex-col">
+      <header class="flex h-[72px] shrink-0 items-center justify-between gap-6 border-b border-slate-200 bg-white px-6 lg:px-8">
+        <div class="relative w-full max-w-md">
+          <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+            <i class="pi pi-search text-sm text-slate-400"></i>
+          </span>
+          <input
+            type="search"
+            [(ngModel)]="searchQuery"
+            (keyup.enter)="onSearch()"
+            placeholder="Search students, leaders, questions..."
+            class="field-input mt-0 w-full pl-10" />
+        </div>
+        <div class="text-sm font-semibold text-slate-700">{{ authUserLabel }}</div>
+      </header>
+
+      <main class="flex-1 overflow-y-auto p-6 lg:p-8">
+        @if (error) {
+          <div class="mb-4 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{{ error }}</div>
+        }
+        @if (success) {
+          <div class="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{{ success }}</div>
+        }
+
+        @if (searchResults) {
+          <div class="mb-6 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <div class="mb-2 flex items-center justify-between">
+              <h3 class="text-sm font-semibold">Search results</h3>
+              <button type="button" class="link-back" (click)="searchResults = null">Clear</button>
+            </div>
+            <div class="grid gap-4 md:grid-cols-3">
+              <div>
+                <p class="text-xs font-medium uppercase text-slate-400">Students</p>
+                <ul class="mt-2 space-y-1 text-sm">
+                  @for (s of searchResults.students; track s.id) {
+                    <li>{{ s.label }}</li>
+                  } @empty {
+                    <li class="text-slate-400">None</li>
+                  }
+                </ul>
+              </div>
+              <div>
+                <p class="text-xs font-medium uppercase text-slate-400">Leaders</p>
+                <ul class="mt-2 space-y-1 text-sm">
+                  @for (l of searchResults.leaders; track l.id) {
+                    <li>{{ l.label }}</li>
+                  } @empty {
+                    <li class="text-slate-400">None</li>
+                  }
+                </ul>
+              </div>
+              <div>
+                <p class="text-xs font-medium uppercase text-slate-400">Questions</p>
+                <ul class="mt-2 space-y-1 text-sm">
+                  @for (q of searchResults.questions; track q.id) {
+                    <li class="truncate">{{ q.label }}</li>
+                  } @empty {
+                    <li class="text-slate-400">None</li>
+                  }
+                </ul>
+              </div>
+            </div>
+          </div>
+        }
+
+        @if (loading) {
+          <div class="flex justify-center py-16">
+            <app-loading-spinner [size]="36"></app-loading-spinner>
+          </div>
+        } @else {
+          <!-- DASHBOARD -->
+          @if (activeTab === 'dashboard') {
+            <div class="space-y-6">
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                <div class="rounded-xl border border-slate-200/80 bg-white p-5 shadow-sm">
+                  <p class="text-3xl font-bold tabular-nums text-[#1E2030]">{{ metrics?.totalStudents ?? '—' }}</p>
+                  <p class="mt-2 text-sm font-medium text-slate-500">Total Students</p>
+                </div>
+                <div class="rounded-xl border border-slate-200/80 bg-white p-5 shadow-sm">
+                  <p class="text-3xl font-bold tabular-nums text-[#1E2030]">{{ metrics?.activeLeaders ?? '—' }}</p>
+                  <p class="mt-2 text-sm font-medium text-slate-500">Active Leaders</p>
+                </div>
+                <div class="rounded-xl border border-slate-200/80 bg-white p-5 shadow-sm">
+                  <p class="text-3xl font-bold tabular-nums text-[#1E2030]">{{ metrics?.questionsInBank ?? '—' }}</p>
+                  <p class="mt-2 text-sm font-medium text-slate-500">Questions in Bank</p>
+                </div>
+                <div class="rounded-xl border border-slate-200/80 bg-white p-5 shadow-sm">
+                  <p class="text-3xl font-bold tabular-nums text-[#1E2030]">{{ metrics?.flagsThisWeek ?? '—' }}</p>
+                  <p class="mt-2 text-sm font-medium text-slate-500">Flags This Week</p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
+                <div class="relative rounded-xl border border-slate-200/80 bg-white p-6 shadow-sm xl:col-span-2">
+                  <h2 class="text-sm font-semibold text-[#1E2030]">Quiz activity (last 30 days)</h2>
+                  <div class="relative mt-6 h-[260px] w-full">
+                    <svg viewBox="0 0 600 220" preserveAspectRatio="none" class="h-full w-full">
+                      <defs>
+                        <linearGradient id="adminChartGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stop-color="#6D47C4" stop-opacity="0.14" />
+                          <stop offset="100%" stop-color="#6D47C4" stop-opacity="0" />
+                        </linearGradient>
+                      </defs>
+                      <path [attr.d]="fillPath" fill="url(#adminChartGradient)"></path>
+                      <path [attr.d]="linePath" fill="none" stroke="#6D47C4" stroke-width="2.5" stroke-linecap="round"></path>
+                      <circle
+                        *ngFor="let p of chartPoints"
+                        [attr.cx]="p.x"
+                        [attr.cy]="p.y"
+                        r="3.5"
+                        class="cursor-pointer fill-white stroke-[#6D47C4] stroke-[2]"
+                        (mouseenter)="showTooltip(p)"
+                        (mouseleave)="hideTooltip()">
+                      </circle>
+                    </svg>
+                    <div
+                      *ngIf="tooltipVisible"
+                      class="pointer-events-none absolute z-20 whitespace-nowrap rounded-lg bg-[#1E2030] px-3 py-2 text-xs text-white shadow-lg"
+                      [style.left.px]="tooltipX"
+                      [style.top.px]="tooltipY">
+                      <div class="font-medium text-brand-200">{{ tooltipData?.label }}</div>
+                      <div>{{ tooltipData?.value }} quizzes completed</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="rounded-xl border border-slate-200/80 bg-white p-6 shadow-sm">
+                  <h2 class="text-sm font-semibold text-[#1E2030]">Recent activity</h2>
+                  <div class="relative mt-6 space-y-5 pl-4 before:absolute before:bottom-3 before:left-[5px] before:top-3 before:w-px before:bg-slate-200">
+                    @for (activity of auditItems; track activity.id; let first = $first) {
+                      <div class="relative flex items-start justify-between gap-3">
+                        <span
+                          class="absolute -left-4 top-1.5 h-2.5 w-2.5 rounded-full ring-4 ring-white"
+                          [ngClass]="first ? 'bg-brand-600' : 'bg-slate-300'">
+                        </span>
+                        <div class="min-w-0 flex-1 pl-2">
+                          <p class="text-sm font-semibold leading-snug text-slate-800">{{ activity.title }}</p>
+                          <p class="mt-1 text-xs text-slate-400">{{ formatDate(activity.createdAt) }}</p>
+                        </div>
+                      </div>
+                    } @empty {
+                      <p class="text-sm text-slate-400">No recent activity</p>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+
+          <!-- CATEGORIES -->
+          @if (activeTab === 'categories') {
+            <div class="grid gap-6 lg:grid-cols-2">
+              <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                <h2 class="text-sm font-semibold">Categories</h2>
+                <div class="mt-4 flex gap-2">
+                  <input class="field-input mt-0" [(ngModel)]="newCategoryName" placeholder="New category name" />
+                  <app-button (buttonClick)="createCategory()">Add</app-button>
+                </div>
+                <ul class="mt-4 divide-y divide-slate-100">
+                  @for (c of categories; track c.id) {
+                    <li class="flex items-center justify-between py-3 text-sm">
+                      <div>
+                        <p class="font-medium">{{ c.name }}</p>
+                        <p class="text-xs text-slate-400">{{ c.description || 'No description' }}</p>
+                      </div>
+                      <button type="button" class="text-xs text-rose-600" (click)="deleteCategory(c.id)">Delete</button>
+                    </li>
+                  }
+                </ul>
+              </div>
+
+              <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                <h2 class="text-sm font-semibold">Age groups</h2>
+                <div class="mt-4 grid grid-cols-[1fr_70px_70px_auto] gap-2">
+                  <input class="field-input mt-0" [(ngModel)]="newAgeName" placeholder="Name" />
+                  <input class="field-input mt-0" type="number" [(ngModel)]="newAgeMin" />
+                  <input class="field-input mt-0" type="number" [(ngModel)]="newAgeMax" />
+                  <app-button (buttonClick)="createAgeGroup()">Add</app-button>
+                </div>
+                <ul class="mt-4 divide-y divide-slate-100">
+                  @for (g of ageGroups; track g.id) {
+                    <li class="flex items-center justify-between py-3 text-sm">
+                      <div>
+                        <p class="font-medium">{{ g.name }}</p>
+                        <p class="text-xs text-slate-400">{{ g.min_age }}–{{ g.max_age }}</p>
+                      </div>
+                      <button type="button" class="text-xs text-rose-600" (click)="deleteAgeGroup(g.id)">Delete</button>
+                    </li>
+                  }
+                </ul>
+              </div>
+            </div>
+          }
+
+          <!-- LEADERS -->
+          @if (activeTab === 'leaders') {
+            <div class="space-y-4">
+              <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                <h2 class="text-sm font-semibold">Invite leader</h2>
+                <div class="mt-4 flex flex-wrap gap-2">
+                  <input class="field-input mt-0 max-w-xs" [(ngModel)]="inviteEmail" placeholder="Email" />
+                  <input class="field-input mt-0 max-w-xs" [(ngModel)]="inviteName" placeholder="Display name (optional)" />
+                  <app-button (buttonClick)="inviteLeader()">Invite</app-button>
+                </div>
+              </div>
+              <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                <table class="w-full text-left text-sm">
+                  <thead class="bg-slate-50 text-xs uppercase text-slate-400">
+                    <tr>
+                      <th class="px-4 py-3">Name</th>
+                      <th class="px-4 py-3">Email</th>
+                      <th class="px-4 py-3">Group</th>
+                      <th class="px-4 py-3">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (l of leaders; track l.id) {
+                      <tr class="border-t border-slate-100">
+                        <td class="px-4 py-3 font-medium">{{ l.displayName || '—' }}</td>
+                        <td class="px-4 py-3 text-slate-500">{{ l.email || '—' }}</td>
+                        <td class="px-4 py-3">{{ l.groupName || 'Unassigned' }}</td>
+                        <td class="px-4 py-3"><span class="chip">{{ l.status }}</span></td>
+                      </tr>
+                    } @empty {
+                      <tr><td colspan="4" class="px-4 py-8 text-center text-slate-400">No leaders yet</td></tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          }
+
+          <!-- QUESTIONS -->
+          @if (activeTab === 'questions') {
+            <div class="space-y-4">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                  <select class="field-input mt-0 w-40" [(ngModel)]="questionStatus" (change)="loadQuestions(1)">
+                    <option value="">All statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="flagged">Flagged</option>
+                    <option value="rejected">Rejected</option>
+                  </select>
+                  <span class="text-sm text-slate-400">{{ questionTotal }} total</span>
+                </div>
+                <app-button (buttonClick)="generateQuestions()">Generate batch</app-button>
+              </div>
+
+              <div class="space-y-2">
+                @for (q of questions; track q.id) {
+                  <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                    <div class="flex flex-wrap items-start justify-between gap-3">
+                      <div class="min-w-0 flex-1">
+                        <div class="mb-1 flex flex-wrap gap-2">
+                          <span class="chip">{{ q.status }}</span>
+                          <span class="chip bg-slate-100 text-slate-600">{{ q.difficulty }}</span>
+                        </div>
+                        <p class="text-sm font-medium text-slate-800">{{ q.prompt }}</p>
+                      </div>
+                      <div class="flex gap-2">
+                        <button type="button" class="text-xs font-medium text-emerald-600" (click)="setQuestionStatus(q.id, 'approve')">Approve</button>
+                        <button type="button" class="text-xs font-medium text-amber-600" (click)="setQuestionStatus(q.id, 'flag')">Flag</button>
+                        <button type="button" class="text-xs font-medium text-rose-600" (click)="setQuestionStatus(q.id, 'reject')">Reject</button>
+                      </div>
+                    </div>
+                  </div>
+                } @empty {
+                  <div class="rounded-xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-400">No questions found</div>
+                }
+              </div>
+
+              <div class="flex items-center gap-3">
+                <app-button variant="outline" [disabled]="questionPage <= 1" (buttonClick)="loadQuestions(questionPage - 1)">Previous</app-button>
+                <span class="text-sm text-slate-500">Page {{ questionPage }}</span>
+                <app-button variant="outline" [disabled]="questionPage * 20 >= questionTotal" (buttonClick)="loadQuestions(questionPage + 1)">Next</app-button>
+              </div>
+            </div>
+          }
+
+          <!-- CLASS CODES -->
+          @if (activeTab === 'class-codes') {
+            <div class="space-y-4">
+              <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                <h2 class="text-sm font-semibold">Create class code</h2>
+                <div class="mt-4 flex flex-wrap gap-2">
+                  <input class="field-input mt-0 max-w-xs" [(ngModel)]="newCode" placeholder="Code e.g. DEV-CLASS" />
+                  <input class="field-input mt-0 max-w-xs" [(ngModel)]="newCodeGroupName" placeholder="Group name" />
+                  <app-button (buttonClick)="createClassCode()">Create</app-button>
+                </div>
+              </div>
+              <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                <table class="w-full text-left text-sm">
+                  <thead class="bg-slate-50 text-xs uppercase text-slate-400">
+                    <tr>
+                      <th class="px-4 py-3">Code</th>
+                      <th class="px-4 py-3">Group</th>
+                      <th class="px-4 py-3">Active</th>
+                      <th class="px-4 py-3">Expires</th>
+                      <th class="px-4 py-3"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (c of classCodes; track c.code) {
+                      <tr class="border-t border-slate-100">
+                        <td class="px-4 py-3 font-mono font-medium">{{ c.code }}</td>
+                        <td class="px-4 py-3">{{ c.groupName || c.groupId }}</td>
+                        <td class="px-4 py-3">
+                          <button type="button" class="chip" (click)="toggleClassCode(c)">
+                            {{ c.isActive ? 'Active' : 'Inactive' }}
+                          </button>
+                        </td>
+                        <td class="px-4 py-3 text-slate-500">{{ c.expiresAt ? formatDate(c.expiresAt) : '—' }}</td>
+                        <td class="px-4 py-3 text-right">
+                          <button type="button" class="text-xs text-rose-600" (click)="deleteClassCode(c.code)">Delete</button>
+                        </td>
+                      </tr>
+                    } @empty {
+                      <tr><td colspan="5" class="px-4 py-8 text-center text-slate-400">No class codes</td></tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          }
+
+          <!-- AUDIT -->
+          @if (activeTab === 'audit') {
+            <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+              <ul class="divide-y divide-slate-100">
+                @for (item of auditItems; track item.id) {
+                  <li class="flex items-start justify-between gap-4 px-5 py-4">
+                    <div>
+                      <p class="text-sm font-semibold text-slate-800">{{ item.title }}</p>
+                      <p class="mt-1 text-xs text-slate-400">
+                        {{ item.action }}
+                        @if (item.actorDisplayName) { · {{ item.actorDisplayName }} }
+                      </p>
+                    </div>
+                    <span class="shrink-0 text-xs text-slate-400">{{ formatDate(item.createdAt) }}</span>
+                  </li>
+                } @empty {
+                  <li class="px-5 py-10 text-center text-sm text-slate-400">No audit entries</li>
+                }
+              </ul>
+            </div>
+          }
+
+          <!-- ANALYTICS -->
+          @if (activeTab === 'analytics') {
+            <div class="space-y-6">
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <p class="text-3xl font-bold tabular-nums">{{ summary?.totalAttempts ?? '—' }}</p>
+                  <p class="mt-2 text-sm text-slate-500">Total attempts</p>
+                </div>
+                <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <p class="text-3xl font-bold tabular-nums">{{ summary?.submittedAttempts ?? '—' }}</p>
+                  <p class="mt-2 text-sm text-slate-500">Submitted</p>
+                </div>
+                <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <p class="text-3xl font-bold tabular-nums">{{ summary?.averageScore ?? '—' }}{{ summary?.averageScore != null ? '%' : '' }}</p>
+                  <p class="mt-2 text-sm text-slate-500">Average score</p>
+                </div>
+              </div>
+              <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <h2 class="text-sm font-semibold">Completions (30 days)</h2>
+                <div class="relative mt-6 h-[260px]">
+                  <svg viewBox="0 0 600 220" preserveAspectRatio="none" class="h-full w-full">
+                    <path [attr.d]="fillPath" fill="url(#adminChartGradient)"></path>
+                    <path [attr.d]="linePath" fill="none" stroke="#6D47C4" stroke-width="2.5"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          }
+        }
+      </main>
+    </div>
+  </div>
+}

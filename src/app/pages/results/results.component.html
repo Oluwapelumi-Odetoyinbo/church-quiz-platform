@@ -1,126 +1,148 @@
 <div class="page-shell">
   <div class="page-container page-enter">
-    <app-card>
-      <div class="grid gap-8 lg:grid-cols-[300px_1fr] lg:items-start">
-        <!-- Score summary -->
-        <aside class="lg:sticky lg:top-10">
-          <h1 class="text-xl font-semibold lg:text-2xl">{{ resultTitle() }}</h1>
-          <p class="mt-1 text-sm text-slate-500">{{ resultSubtitle() }}</p>
+    @if (loading()) {
+      <div class="page-card flex justify-center p-12">
+        <app-loading-spinner [size]="36"></app-loading-spinner>
+      </div>
+    } @else if (error() && !result()) {
+      <app-card>
+        <h1 class="text-xl font-semibold">Unable to load results</h1>
+        <p class="mt-2 text-sm text-rose-600">{{ error() }}</p>
+        <div class="mt-6">
+          <app-button size="lg" (buttonClick)="playAgain()">Start over</app-button>
+        </div>
+      </app-card>
+    } @else {
+      <app-card>
+        <div class="grid gap-8 lg:grid-cols-[300px_1fr] lg:items-start">
+          <aside class="lg:sticky lg:top-10">
+            <h1 class="text-xl font-semibold lg:text-2xl">{{ resultTitle() }}</h1>
+            <p class="mt-1 text-sm text-slate-500">{{ resultSubtitle() }}</p>
 
-          <div class="mt-6 flex items-center gap-4">
-            <app-score-ring
-              [correct]="correctCount()"
-              [total]="totalCount()"
-              [size]="112">
-            </app-score-ring>
+            <div class="mt-6 flex items-center gap-4">
+              <app-score-ring
+                [correct]="correctCount()"
+                [total]="totalCount()"
+                [size]="112">
+              </app-score-ring>
 
-            @if (isKidsLayout() && scorePercent() >= 80) {
-              <div class="flex h-12 w-12 items-center justify-center rounded-full bg-amber-50">
-                <i class="pi pi-star-fill text-2xl text-amber-400"></i>
-              </div>
-            }
-          </div>
-
-          <div class="mt-6 flex flex-wrap gap-2">
-            <span class="chip bg-violet-50 text-violet-700">Easy 3/3</span>
-            <span class="chip bg-amber-50 text-amber-700">Medium 3/4</span>
-            <span class="chip bg-orange-50 text-orange-700">Hard 2/3</span>
-          </div>
-
-          <div class="mt-8 hidden grid-cols-2 gap-3 lg:grid">
-            <app-button variant="outline" size="lg" [fullWidth]="true" (buttonClick)="playAgain()">
-              <i class="pi pi-refresh text-xs"></i>
-              Play Again
-            </app-button>
-            <app-button size="lg" [fullWidth]="true" (buttonClick)="openLeaderboard()">
-              <i class="pi pi-trophy text-xs"></i>
-              Leaderboard
-            </app-button>
-          </div>
-        </aside>
-
-        <!-- Answer review -->
-        <div>
-          <p class="mb-4 text-xs font-medium uppercase tracking-wide text-brand-500">
-            Your answers
-          </p>
-
-          @if (hasResultData()) {
-            <div class="scroll-area max-h-[60vh] space-y-2 lg:max-h-[calc(100vh-12rem)]">
-              @for (item of reviewedQuestions(); track item.question.id) {
-                <div
-                  class="flex items-start gap-3 rounded-lg border p-3 lg:p-4"
-                  [ngClass]="
-                    item.isCorrect
-                      ? 'border-emerald-100 bg-emerald-50/50'
-                      : isKidsLayout()
-                      ? 'border-orange-100 bg-orange-50/50'
-                      : 'border-rose-100 bg-rose-50/50'
-                  ">
-                  <div
-                    class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
-                    [ngClass]="
-                      item.isCorrect
-                        ? 'bg-emerald-600'
-                        : isKidsLayout()
-                        ? 'border-2 border-orange-500 bg-white'
-                        : 'bg-rose-600'
-                    ">
-                    @if (item.isCorrect) {
-                      <i class="pi pi-check text-[10px] text-white"></i>
-                    } @else if (isKidsLayout()) {
-                      <div class="h-2.5 w-2.5 rounded-full bg-orange-500"></div>
-                    } @else {
-                      <i class="pi pi-times text-[10px] text-white"></i>
-                    }
-                  </div>
-
-                  <div class="min-w-0 flex-1">
-                    <p class="text-sm font-medium text-slate-800 lg:text-base">{{ item.question.question }}</p>
-                    <div class="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs lg:text-sm">
-                      <span class="text-slate-500">
-                        Your answer:
-                        <span
-                          [ngClass]="item.isCorrect
-                            ? 'font-medium text-emerald-700'
-                            : 'font-medium text-rose-600 line-through'">
-                          {{ item.userAnswer || '(No answer)' }}
-                        </span>
-                      </span>
-                      @if (!item.isCorrect) {
-                        <span class="text-slate-500">
-                          Correct:
-                          <span class="font-medium text-emerald-700">{{ item.question.answer }}</span>
-                        </span>
-                      }
-                    </div>
-                    @if (!item.isCorrect && isKidsLayout()) {
-                      <p class="mt-1 text-xs text-orange-600">
-                        {{ $index % 2 === 0 ? 'So close!' : 'Nice try!' }}
-                      </p>
-                    }
-                  </div>
+              @if (isKidsLayout() && scorePercent() >= 80) {
+                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-amber-50">
+                  <i class="pi pi-star-fill text-2xl text-amber-400"></i>
                 </div>
               }
             </div>
-          } @else {
-            <div class="rounded-lg border border-dashed border-slate-200 bg-slate-50 p-6 text-sm text-slate-500">
-              No result data available.
-            </div>
-          }
 
-          <div class="mt-6 grid grid-cols-2 gap-3 lg:hidden">
-            <app-button variant="outline" size="lg" [fullWidth]="true" (buttonClick)="playAgain()">
-              <i class="pi pi-refresh text-xs"></i>
-              Play Again
-            </app-button>
-            <app-button size="lg" [fullWidth]="true" (buttonClick)="openLeaderboard()">
-              <i class="pi pi-trophy text-xs"></i>
-              Leaderboard
-            </app-button>
+            <div class="mt-6 flex flex-wrap gap-2">
+              @for (chip of difficultyChips(); track chip.label) {
+                <span class="chip" [ngClass]="chip.className">{{ chip.label }}</span>
+              }
+            </div>
+
+            @if (result()?.difficultyBreakdownDisplay) {
+              <p class="mt-3 text-xs text-slate-400">{{ result()?.difficultyBreakdownDisplay }}</p>
+            }
+
+            <div class="mt-8 hidden space-y-2 lg:block">
+              <app-button size="lg" [fullWidth]="true" (buttonClick)="viewLeaderboard()">
+                <i class="pi pi-trophy text-xs"></i>
+                Leaderboard
+              </app-button>
+              <app-button size="lg" variant="secondary" [fullWidth]="true" (buttonClick)="playAgain()">
+                <i class="pi pi-refresh text-xs"></i>
+                Play Again
+              </app-button>
+            </div>
+          </aside>
+
+          <div>
+            <p class="mb-4 text-xs font-medium uppercase tracking-wide text-brand-500">
+              Your answers
+            </p>
+
+            @if (review().length) {
+              <div class="scroll-area max-h-[60vh] space-y-2 lg:max-h-[calc(100vh-12rem)]">
+                @for (item of review(); track trackReview($index, item)) {
+                  <div
+                    class="flex items-start gap-3 rounded-lg border p-3 lg:p-4"
+                    [ngClass]="
+                      item.isCorrect
+                        ? 'border-emerald-100 bg-emerald-50/50'
+                        : isKidsLayout()
+                        ? 'border-orange-100 bg-orange-50/50'
+                        : 'border-rose-100 bg-rose-50/50'
+                    ">
+                    <div
+                      class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
+                      [ngClass]="
+                        item.isCorrect
+                          ? 'bg-emerald-600'
+                          : isKidsLayout()
+                          ? 'border-2 border-orange-500 bg-white'
+                          : 'bg-rose-600'
+                      ">
+                      @if (item.isCorrect) {
+                        <i class="pi pi-check text-[10px] text-white"></i>
+                      } @else if (isKidsLayout()) {
+                        <div class="h-2.5 w-2.5 rounded-full bg-orange-500"></div>
+                      } @else {
+                        <i class="pi pi-times text-[10px] text-white"></i>
+                      }
+                    </div>
+
+                    <div class="min-w-0 flex-1">
+                      <div class="mb-1 flex flex-wrap items-center gap-2">
+                        <span class="chip text-[10px]">{{ item.difficulty }}</span>
+                      </div>
+                      <p class="text-sm font-medium text-slate-800 lg:text-base">{{ item.prompt }}</p>
+                      <div class="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs lg:text-sm">
+                        <span class="text-slate-500">
+                          Your answer:
+                          <span
+                            [ngClass]="item.isCorrect
+                              ? 'font-medium text-emerald-700'
+                              : 'font-medium text-rose-600 line-through'">
+                            {{ item.selectedChoiceText || '(No answer)' }}
+                          </span>
+                        </span>
+                        @if (!item.isCorrect) {
+                          <span class="text-slate-500">
+                            Correct:
+                            <span class="font-medium text-emerald-700">{{ item.correctChoiceText }}</span>
+                          </span>
+                        }
+                      </div>
+                      @if (item.explanation) {
+                        <p class="mt-1.5 text-xs text-slate-500">{{ item.explanation }}</p>
+                      }
+                      @if (!item.isCorrect && isKidsLayout()) {
+                        <p class="mt-1 text-xs text-orange-600">
+                          {{ $index % 2 === 0 ? 'So close!' : 'Nice try!' }}
+                        </p>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="rounded-lg border border-dashed border-slate-200 bg-slate-50 p-6 text-sm text-slate-500">
+                No result data available.
+              </div>
+            }
+
+            <div class="mt-6 space-y-2 lg:hidden">
+              <app-button size="lg" [fullWidth]="true" (buttonClick)="viewLeaderboard()">
+                <i class="pi pi-trophy text-xs"></i>
+                Leaderboard
+              </app-button>
+              <app-button size="lg" variant="secondary" [fullWidth]="true" (buttonClick)="playAgain()">
+                <i class="pi pi-refresh text-xs"></i>
+                Play Again
+              </app-button>
+            </div>
           </div>
         </div>
-      </div>
-    </app-card>
+      </app-card>
+    }
   </div>
 </div>

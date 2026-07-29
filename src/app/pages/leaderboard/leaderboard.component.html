@@ -6,75 +6,135 @@
           <app-logo size="sm"></app-logo>
           <div>
             <h1 class="text-xl font-semibold lg:text-2xl">Leaderboard</h1>
-            <p class="text-sm text-slate-500">Top scores this week</p>
+            <p class="text-sm text-slate-500">
+              {{ period === 'week' ? 'Top scores this week' : 'All-time top scores' }}
+              @if (catalog?.categoryName && selectedTab === 'category') {
+                · {{ catalog?.categoryName }}
+              }
+              @if (catalog?.ageGroupName && selectedTab === 'age') {
+                · {{ catalog?.ageGroupName }}
+              }
+            </p>
           </div>
         </div>
         <button type="button" (click)="back()" class="link-back sm:shrink-0">← Back to results</button>
       </div>
 
-      <div class="tab-group mt-6 max-w-xl">
-        <button
-          type="button"
-          (click)="selectTab('class')"
-          class="tab-item"
-          [ngClass]="selectedTab === 'class' ? 'tab-item-active' : ''">
-          My Class
-        </button>
-        <button
-          type="button"
-          (click)="selectTab('age')"
-          class="tab-item"
-          [ngClass]="selectedTab === 'age' ? 'tab-item-active' : ''">
-          My Age Group
-        </button>
-        <button
-          type="button"
-          (click)="selectTab('category')"
-          class="tab-item"
-          [ngClass]="selectedTab === 'category' ? 'tab-item-active' : ''">
-          By Category
-        </button>
+      <div class="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="tab-group max-w-xl">
+          <button
+            type="button"
+            (click)="selectTab('class')"
+            class="tab-item"
+            [ngClass]="selectedTab === 'class' ? 'tab-item-active' : ''">
+            My Class
+          </button>
+          <button
+            type="button"
+            (click)="selectTab('age')"
+            class="tab-item"
+            [ngClass]="selectedTab === 'age' ? 'tab-item-active' : ''">
+            My Age Group
+          </button>
+          <button
+            type="button"
+            (click)="selectTab('category')"
+            class="tab-item"
+            [ngClass]="selectedTab === 'category' ? 'tab-item-active' : ''">
+            By Category
+          </button>
+        </div>
+
+        <div class="tab-group w-full max-w-[180px] sm:w-auto">
+          <button
+            type="button"
+            class="tab-item"
+            [ngClass]="period === 'week' ? 'tab-item-active' : ''"
+            (click)="setPeriod('week')">
+            Week
+          </button>
+          <button
+            type="button"
+            class="tab-item"
+            [ngClass]="period === 'all' ? 'tab-item-active' : ''"
+            (click)="setPeriod('all')">
+            All time
+          </button>
+        </div>
       </div>
 
-      <div class="mt-6 divide-y divide-slate-100 rounded-lg border border-slate-200">
-        @for (player of leaderboard; track player.rank) {
-          <div
-            class="flex items-center justify-between px-4 py-3 transition-colors lg:px-5 lg:py-3.5"
-            [ngClass]="[
-              player.me ? 'bg-brand-50' : 'bg-white hover:bg-slate-50',
-              player.rank === 1 ? 'rank-gold' : '',
-              player.rank === 2 ? 'rank-silver' : '',
-              player.rank === 3 ? 'rank-bronze' : ''
-            ]">
-            <div class="flex items-center gap-3 lg:gap-4">
-              <div class="w-8 text-center text-sm font-semibold text-slate-500 lg:w-10">
-                @switch (player.rank) {
-                  @case (1) { 🥇 }
-                  @case (2) { 🥈 }
-                  @case (3) { 🥉 }
-                  @default { {{ player.rank }} }
-                }
+      @if (currentStudent) {
+        <div class="mt-5 rounded-lg border border-brand-200 bg-brand-50 px-4 py-3 text-sm text-brand-800">
+          You're ranked <span class="font-semibold">#{{ currentStudent.rank }}</span>
+          with <span class="font-semibold">{{ currentStudent.points }}</span> pts
+          (best {{ currentStudent.totalScore }}/{{ currentStudent.maxScore }}).
+        </div>
+      }
+
+      @if (error) {
+        <div class="mt-5 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+          {{ error }}
+        </div>
+      }
+
+      @if (loading) {
+        <div class="flex justify-center py-12">
+          <app-loading-spinner [size]="32"></app-loading-spinner>
+        </div>
+      } @else {
+        <div class="mt-6 divide-y divide-slate-100 rounded-lg border border-slate-200">
+          @for (player of entries; track trackEntry($index, player)) {
+            <div
+              class="flex items-center justify-between px-4 py-3 transition-colors lg:px-5 lg:py-3.5"
+              [ngClass]="[
+                player.isCurrentStudent ? 'bg-brand-50' : 'bg-white hover:bg-slate-50',
+                player.rank === 1 ? 'rank-gold' : '',
+                player.rank === 2 ? 'rank-silver' : '',
+                player.rank === 3 ? 'rank-bronze' : ''
+              ]">
+              <div class="flex min-w-0 items-center gap-3 lg:gap-4">
+                <div class="w-8 text-center text-sm font-semibold text-slate-500 lg:w-10">
+                  @switch (player.rank) {
+                    @case (1) { 🥇 }
+                    @case (2) { 🥈 }
+                    @case (3) { 🥉 }
+                    @default { {{ player.rank }} }
+                  }
+                </div>
+
+                <img
+                  [src]="player.avatarUrl"
+                  [alt]="player.displayName"
+                  class="h-9 w-9 rounded-full bg-brand-50 object-cover lg:h-10 lg:w-10"
+                  loading="lazy" />
+
+                <div class="min-w-0">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="truncate text-sm font-medium text-slate-800 lg:text-base">
+                      {{ player.displayName }}
+                    </span>
+                    @if (player.isCurrentStudent) {
+                      <span class="chip bg-brand-600 text-white">You</span>
+                    }
+                  </div>
+                  <p class="text-xs text-slate-400">
+                    Best {{ player.totalScore }}/{{ player.maxScore }}
+                  </p>
+                </div>
               </div>
 
-              <div class="flex h-9 w-9 items-center justify-center rounded-full bg-brand-50 text-lg lg:h-10 lg:w-10">
-                {{ player.avatar }}
-              </div>
-
-              <div class="flex items-center gap-2">
-                <span class="text-sm font-medium text-slate-800 lg:text-base">{{ player.name }}</span>
-                @if (player.me) {
-                  <span class="chip bg-brand-600 text-white">You</span>
-                }
-              </div>
+              <span class="shrink-0 text-sm font-semibold tabular-nums text-slate-800 lg:text-base">
+                {{ player.points }}
+                <span class="text-xs font-normal text-slate-400">pts</span>
+              </span>
             </div>
-
-            <span class="text-sm font-semibold tabular-nums text-slate-800 lg:text-base">
-              {{ player.points }}
-              <span class="text-xs font-normal text-slate-400">pts</span>
-            </span>
-          </div>
-        }
-      </div>
+          } @empty {
+            <div class="px-4 py-10 text-center text-sm text-slate-400">
+              No rankings yet for this view.
+            </div>
+          }
+        </div>
+      }
     </app-card>
   </div>
 </div>

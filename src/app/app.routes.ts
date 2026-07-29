@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { adminGuard } from './core/guards/admin.guard';
+import { quizSessionGuard } from './core/guards/quiz-session.guard';
 
 export const routes: Routes = [
   {
@@ -8,28 +9,20 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/landing/landing.component').then(m => m.LandingPageComponent)
   },
   {
-    path: 'details',
-    loadComponent: () => import('./pages/details/details.component').then(m => m.DetailsPageComponent)
-  },
-  {
     path: 'age-group',
     loadComponent: () => import('./pages/age-group/age-group.component').then(m => m.AgeGroupPageComponent)
   },
   {
-    path: 'instructions/:ageGroup',
-    loadComponent: () => import('./pages/instructions/instructions.component').then(m => m.InstructionsPageComponent)
+    path: 'category/:ageGroupId',
+    loadComponent: () => import('./pages/category/category.component').then(m => m.CategoryPageComponent)
   },
   {
-    path: 'quiz/:ageGroup',
-    loadComponent: () => import('./pages/quiz/quiz.component').then(m => m.QuizPageComponent)
+    path: 'quiz/:attemptId',
+    loadComponent: () => import('./pages/quiz/quiz.component').then(m => m.QuizPageComponent),
+    canActivate: [quizSessionGuard]
   },
   {
-    path: 'quiz',
-    pathMatch: 'full',
-    redirectTo: 'age-group'
-  },
-  {
-    path: 'results/:ageGroup',
+    path: 'results/:attemptId',
     loadComponent: () => import('./pages/results/results.component').then(m => m.ResultsPageComponent)
   },
   {
@@ -41,6 +34,10 @@ export const routes: Routes = [
     loadChildren: () => import('./features/admin/routes').then(m => m.ADMIN_ROUTES),
     canActivate: [adminGuard]
   },
+  // Legacy redirects
+  { path: 'details', redirectTo: '' },
+  { path: 'instructions/:ageGroup', redirectTo: 'age-group' },
+  { path: 'quiz', pathMatch: 'full', redirectTo: 'age-group' },
   {
     path: '**',
     redirectTo: ''

@@ -1,0 +1,103 @@
+<div class="page-shell">
+  <div class="page-container page-enter">
+    <app-card>
+      <app-step-progress [current]="3" [total]="3"></app-step-progress>
+
+      <div class="mt-8 grid gap-8 lg:grid-cols-[1fr_380px] lg:items-start">
+        <div>
+          <div class="flex items-center gap-3">
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-2xl">
+              📚
+            </div>
+            <div>
+              <h1 class="page-title !text-xl lg:!text-2xl">Pick a category</h1>
+              @if (ageGroupName) {
+                <p class="page-subtitle">{{ ageGroupName }}</p>
+              }
+            </div>
+          </div>
+
+          <p class="mt-6 max-w-xl text-sm leading-relaxed text-slate-600 lg:text-base">
+            You'll answer 10 questions in your chosen category. Each question has a 30-second timer.
+            Review your answers at the end.
+          </p>
+
+          <ul class="mt-6 space-y-3 lg:hidden">
+            <li class="flex items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
+              <i class="pi pi-clock mt-0.5 text-sm text-brand-500"></i>
+              <div>
+                <p class="text-sm font-medium text-slate-700">10 questions · 30 sec each</p>
+                <p class="text-xs text-slate-400">About 5 minutes total</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <ul class="hidden space-y-3 lg:block">
+          <li class="flex items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
+            <i class="pi pi-clock mt-0.5 text-sm text-brand-500"></i>
+            <div>
+              <p class="text-sm font-medium text-slate-700">10 questions · 30 sec each</p>
+              <p class="text-xs text-slate-400">About 5 minutes total</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
+            <i class="pi pi-chart-line mt-0.5 text-sm text-brand-500"></i>
+            <div>
+              <p class="text-sm font-medium text-slate-700">Mixed difficulty</p>
+              <p class="text-xs text-slate-400">4 Easy, 3 Medium, 3 Hard</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
+            <i class="pi pi-shield mt-0.5 text-sm text-brand-500"></i>
+            <div>
+              <p class="text-sm font-medium text-slate-700">Answers saved as you go</p>
+              <p class="text-xs text-slate-400">Stay on this tab until you finish</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      @if (loading) {
+        <div class="flex justify-center py-12">
+          <app-loading-spinner [size]="32"></app-loading-spinner>
+        </div>
+      } @else if (error && !categories.length) {
+        <div class="mt-6 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+          {{ error }}
+        </div>
+      } @else {
+        <div class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          @for (category of categories; track category.id) {
+            <button
+              type="button"
+              (click)="selectCategory($index)"
+              class="selection-card !items-start !text-left"
+              [class.selection-card-active]="selectedIndex === $index">
+              <h2 class="text-base font-semibold">{{ category.name }}</h2>
+              <p class="mt-1 text-xs leading-relaxed text-slate-500">{{ category.description }}</p>
+            </button>
+          }
+        </div>
+
+        @if (error) {
+          <div class="mt-4 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+            {{ error }}
+          </div>
+        }
+
+        <div class="page-actions">
+          <button type="button" (click)="goBack()" class="link-back" [disabled]="starting">← Back</button>
+          <app-button
+            size="lg"
+            [disabled]="!categories.length"
+            [loading]="starting"
+            (buttonClick)="startQuiz()">
+            Start Quiz
+            <i class="pi pi-play text-xs"></i>
+          </app-button>
+        </div>
+      }
+    </app-card>
+  </div>
+</div>

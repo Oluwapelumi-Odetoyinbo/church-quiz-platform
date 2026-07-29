@@ -7,3 +7,4 @@ export * from './quiz-result.model';
 export * from './quiz-attempt.model';
 export * from './result.model';
 export * from './leaderboard-entry.model';
+export * from './api';

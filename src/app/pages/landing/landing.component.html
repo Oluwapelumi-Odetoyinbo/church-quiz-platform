@@ -1,7 +1,6 @@
 <div class="page-shell">
   <div class="page-container page-enter">
     <div class="grid items-start gap-8 lg:grid-cols-[1fr_420px] lg:gap-12">
-      <!-- Brand panel -->
       <div class="page-header lg:pt-4">
         <app-logo size="lg"></app-logo>
         <h1 class="page-title mt-6">Church Quiz</h1>
@@ -24,8 +23,13 @@
         </ul>
       </div>
 
-      <!-- Form panel -->
       <app-card styleClass="lg:sticky lg:top-10">
+        @if (sessionExpired) {
+          <div class="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+            Your session expired. Please start again.
+          </div>
+        }
+
         <app-step-progress [current]="1" [total]="3"></app-step-progress>
 
         <div class="mt-6 flex items-center justify-between gap-3">
@@ -36,7 +40,7 @@
         </div>
 
         <div class="mt-4 flex flex-wrap gap-3">
-          @for (avatar of avatars; track $index) {
+          @for (avatar of avatars; track avatar.id) {
             <button
               type="button"
               (click)="selectAvatar($index)"

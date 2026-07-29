@@ -10,27 +10,40 @@
         </p>
       </div>
 
-      <div class="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        @for (group of ageGroups; track $index) {
-          <button
-            type="button"
-            (click)="selectAge($index)"
-            class="selection-card"
-            [class.selection-card-active]="selectedAge === $index">
-            <div class="text-2xl">{{ group.icon }}</div>
-            <h2 class="mt-2 text-base font-semibold">{{ group.age }}</h2>
-            <p class="mt-0.5 text-xs uppercase tracking-wide text-slate-400">{{ group.label }}</p>
-          </button>
-        }
-      </div>
+      @if (loading) {
+        <div class="flex justify-center py-12">
+          <app-loading-spinner [size]="32"></app-loading-spinner>
+        </div>
+      } @else if (error) {
+        <div class="mt-6 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+          {{ error }}
+        </div>
+        <div class="page-actions">
+          <button type="button" (click)="goBack()" class="link-back">← Back</button>
+        </div>
+      } @else {
+        <div class="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
+          @for (group of ageGroups; track group.id) {
+            <button
+              type="button"
+              (click)="selectAge($index)"
+              class="selection-card"
+              [class.selection-card-active]="selectedIndex === $index">
+              <div class="text-2xl">{{ getIcon(group) }}</div>
+              <h2 class="mt-2 text-base font-semibold">{{ group.minAge }}-{{ group.maxAge }}</h2>
+              <p class="mt-0.5 text-xs uppercase tracking-wide text-slate-400">{{ getLabel(group) }}</p>
+            </button>
+          }
+        </div>
 
-      <div class="page-actions">
-        <button type="button" (click)="goBack()" class="link-back">← Back</button>
-        <app-button size="lg" (buttonClick)="continue()">
-          Continue
-          <i class="pi pi-arrow-right text-xs"></i>
-        </app-button>
-      </div>
+        <div class="page-actions">
+          <button type="button" (click)="goBack()" class="link-back">← Back</button>
+          <app-button size="lg" [disabled]="!ageGroups.length" (buttonClick)="continue()">
+            Continue
+            <i class="pi pi-arrow-right text-xs"></i>
+          </app-button>
+        </div>
+      }
     </app-card>
   </div>
 </div>
