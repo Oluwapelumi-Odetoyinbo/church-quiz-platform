@@ -1,0 +1,66 @@
+<div class="page-shell">
+  <div class="page-container-narrow page-enter">
+    <app-card>
+      <div class="mx-auto max-w-md">
+        <div class="flex items-center justify-center gap-3">
+          <app-logo size="sm"></app-logo>
+          <div>
+            <p class="text-xs font-medium uppercase tracking-wide text-brand-500">Welcome back</p>
+            <h1 class="page-title mt-1">Log in</h1>
+          </div>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="submit()" class="mt-6 space-y-5">
+          <div>
+            <label class="field-label" for="usernameOrEmail">Username or Email</label>
+            <input
+              id="usernameOrEmail"
+              type="text"
+              class="field-input"
+              [class.field-input-error]="form.get('usernameOrEmail')?.touched && form.get('usernameOrEmail')?.invalid"
+              formControlName="usernameOrEmail"
+              placeholder="Enter your username or email" />
+            @if (form.get('usernameOrEmail')?.touched && form.get('usernameOrEmail')?.hasError('required')) {
+              <p class="mt-1.5 text-xs text-rose-500">Username or email is required.</p>
+            }
+            @if (form.get('usernameOrEmail')?.touched && form.get('usernameOrEmail')?.hasError('minlength')) {
+              <p class="mt-1.5 text-xs text-rose-500">Please enter at least 3 characters.</p>
+            }
+          </div>
+
+          <div>
+            <label class="field-label" for="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              class="field-input"
+              [class.field-input-error]="form.get('password')?.touched && form.get('password')?.invalid"
+              formControlName="password"
+              placeholder="Enter your password" />
+            @if (form.get('password')?.touched && form.get('password')?.hasError('required')) {
+              <p class="mt-1.5 text-xs text-rose-500">Password is required.</p>
+            }
+            @if (form.get('password')?.touched && form.get('password')?.hasError('minlength')) {
+              <p class="mt-1.5 text-xs text-rose-500">Password must be at least 8 characters long.</p>
+            }
+          </div>
+
+          @if (error) {
+            <div class="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+              {{ error }}
+            </div>
+          }
+
+          <app-button type="submit" [fullWidth]="true" size="lg" [loading]="loading" (buttonClick)="submit()">
+            Log in
+          </app-button>
+
+          <p class="text-center text-sm text-slate-500">
+            Need an account?
+            <a routerLink="/signup" class="font-medium text-brand-600 hover:text-brand-700">Create one</a>
+          </p>
+        </form>
+      </div>
+    </app-card>
+  </div>
+</div>

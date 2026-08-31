@@ -1,11 +1,10 @@
 export interface StartSessionRequest {
-  displayName: string;
-  avatarUrl: string;
   ageGroupId: string;
   categoryId: string;
-  /** Reuse student on replay so no-repeat applies across sessions. */
-  studentId?: string;
+  avatarUrl?: string;
   classCode?: string;
+  /** Optional legacy replay field if the backend supports it. */
+  studentId?: string;
 }
 
 export interface StartSessionResponse {

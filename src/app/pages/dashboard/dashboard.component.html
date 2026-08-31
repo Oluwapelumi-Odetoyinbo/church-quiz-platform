@@ -1,0 +1,36 @@
+<div class="page-shell">
+  <div class="page-container page-enter">
+    <app-card>
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <p class="text-xs font-medium uppercase tracking-wide text-brand-500">Dashboard</p>
+          <h1 class="page-title mt-2">Welcome, {{ currentUser?.username || currentUser?.email || 'User' }}</h1>
+        </div>
+
+        <app-button variant="secondary" (buttonClick)="logout()">Log out</app-button>
+      </div>
+
+      <div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <p class="text-sm text-slate-500">User ID</p>
+          <p class="mt-2 font-medium text-slate-800">{{ currentUser?.id || currentUser?.userId || 'Not available' }}</p>
+        </div>
+
+        <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <p class="text-sm text-slate-500">Email</p>
+          <p class="mt-2 font-medium text-slate-800">{{ currentUser?.email || 'Not available' }}</p>
+        </div>
+
+        <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <p class="text-sm text-slate-500">Username</p>
+          <p class="mt-2 font-medium text-slate-800">{{ currentUser?.username || 'Not available' }}</p>
+        </div>
+      </div>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a routerLink="/leaderboard" class="chip bg-brand-50 text-brand-600">Leaderboard</a>
+        <a routerLink="/age-group" class="chip bg-slate-100 text-slate-700">Play Quiz</a>
+      </div>
+    </app-card>
+  </div>
+</div>

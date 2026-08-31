@@ -1,11 +1,15 @@
 export type LeaderboardScope = 'class' | 'age_group' | 'category';
-export type LeaderboardPeriod = 'week' | 'all';
+export type LeaderboardPeriod = 'week' | 'month' | 'all';
 
 export interface LeaderboardEntryDto {
   rank: number;
   studentId: string;
+  firstName: string;
+  lastName: string;
   displayName: string;
-  avatarUrl: string;
+  ageGroupId: string | null;
+  ageGroup: string | null;
+  avatarUrl: string | null;
   points: number;
   totalScore: number;
   maxScore: number;

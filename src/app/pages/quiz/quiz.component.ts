@@ -95,6 +95,13 @@ export class QuizPageComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const categoryId = this.session.getCatalogSelection()?.categoryId;
+    if (categoryId && this.session.isSubjectCompleted(categoryId)) {
+      const ageGroupId = this.session.getCatalogSelection()?.ageGroupId ?? 'age-group';
+      void this.router.navigate(['/category', ageGroupId]);
+      return;
+    }
+
     this.timeLimitSeconds.set(this.session.getTimeLimitSeconds());
     this.loadQuiz(attemptId);
   }
@@ -229,6 +236,11 @@ export class QuizPageComponent implements OnInit, OnDestroy {
   }
 
   private finishWithResult(result: SubmitQuizResponse): void {
+    const categoryId = this.session.getCatalogSelection()?.categoryId;
+    if (categoryId) {
+      this.session.completeSubject(categoryId, this.session.getAvailableSubjects());
+    }
+
     this.quizFinished = true;
     this.clearQuestionTimer();
     this.session.setResult(result);

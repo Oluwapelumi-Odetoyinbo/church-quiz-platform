@@ -2,11 +2,28 @@ import { Routes } from '@angular/router';
 import { adminGuard } from './core/guards/admin.guard';
 import { quizSessionGuard } from './core/guards/quiz-session.guard';
 
+import { authGuard, publicAuthGuard } from './core/guards/auth.guard';
+
 export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
     loadComponent: () => import('./pages/landing/landing.component').then(m => m.LandingPageComponent)
+  },
+  {
+    path: 'login',
+    canActivate: [publicAuthGuard],
+    loadComponent: () => import('./pages/auth/login.component').then(m => m.LoginComponent)
+  },
+  {
+    path: 'signup',
+    canActivate: [publicAuthGuard],
+    loadComponent: () => import('./pages/auth/signup.component').then(m => m.SignupComponent)
+  },
+  {
+    path: 'dashboard',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent)
   },
   {
     path: 'age-group',

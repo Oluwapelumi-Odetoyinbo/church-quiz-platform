@@ -61,15 +61,35 @@ export class CategoryPageComponent implements OnInit {
     this.catalog.getCategories().subscribe({
       next: (categories) => {
         this.categories = categories;
-        this.loading = false;
 
-        const savedId = catalog?.categoryId;
-        if (savedId) {
-          const idx = categories.findIndex((c) => c.id === savedId);
-          if (idx >= 0) {
-            this.selectedIndex = idx;
+        this.studentApi.getProgress().subscribe({
+          next: (progress) => {
+            this.session.setAvailableSubjects(progress.availableCategoryIds ?? categories.map((category) => category.id));
+            this.session.setCompletedSubjects(progress.completedCategoryIds ?? []);
+            this.loading = false;
+
+            const savedId = catalog?.categoryId;
+            if (savedId) {
+              const idx = categories.findIndex((c) => c.id === savedId);
+              if (idx >= 0) {
+                this.selectedIndex = idx;
+              }
+            }
+          },
+          error: () => {
+            this.session.setAvailableSubjects(categories.map((category) => category.id));
+            this.session.setCompletedSubjects([]);
+            this.loading = false;
+
+            const savedId = catalog?.categoryId;
+            if (savedId) {
+              const idx = categories.findIndex((c) => c.id === savedId);
+              if (idx >= 0) {
+                this.selectedIndex = idx;
+              }
+            }
           }
-        }
+        });
       },
       error: (err) => {
         this.error = getHttpErrorMessage(err);
@@ -78,7 +98,16 @@ export class CategoryPageComponent implements OnInit {
     });
   }
 
+  isCategoryLocked(categoryId: string): boolean {
+    return this.session.isSubjectCompleted(categoryId);
+  }
+
   selectCategory(index: number): void {
+    const category = this.categories[index];
+    if (!category || this.isCategoryLocked(category.id)) {
+      return;
+    }
+
     this.selectedIndex = index;
   }
 
@@ -87,6 +116,11 @@ export class CategoryPageComponent implements OnInit {
     const category = this.categories[this.selectedIndex];
 
     if (!profile || !category || !this.ageGroupId || this.starting) {
+      return;
+    }
+
+    if (this.isCategoryLocked(category.id)) {
+      this.error = 'This subject has already been completed for this cycle.';
       return;
     }
 
@@ -101,13 +135,9 @@ export class CategoryPageComponent implements OnInit {
     });
 
     const body = {
-      displayName: profile.displayName,
-      avatarUrl: profile.avatarUrl,
       ageGroupId: this.ageGroupId,
       categoryId: category.id,
-      ...(this.session.getStudentId()
-        ? { studentId: this.session.getStudentId()! }
-        : {}),
+      ...(profile.avatarUrl ? { avatarUrl: profile.avatarUrl } : {}),
       ...(profile.classCode ? { classCode: profile.classCode } : {})
     };
 

@@ -3,13 +3,15 @@ import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 import type {
+  AgeGroupDto,
   LeaderboardCurrentStudentDto,
   LeaderboardEntryDto,
+  LeaderboardPeriod,
   LeaderboardScope
 } from '../../core/models/api';
+import { CatalogService } from '../../core/services/catalog.service';
 import { LeaderboardApiService } from '../../core/services/leaderboard-api.service';
 import { StudentSessionService } from '../../core/services/student-session.service';
-import { getHttpErrorMessage } from '../../core/interceptors/error.interceptor';
 import { CardComponent } from '../../shared/components/card/card.component';
 import { AppLogoComponent } from '../../shared/components/app-logo/app-logo.component';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
@@ -24,11 +26,14 @@ type TabId = 'class' | 'age' | 'category';
 })
 export class LeaderboardComponent implements OnInit {
   private readonly router = inject(Router);
+  private readonly catalogApi = inject(CatalogService);
   private readonly leaderboardApi = inject(LeaderboardApiService);
   private readonly session = inject(StudentSessionService);
 
   selectedTab: TabId = 'age';
-  period: 'week' | 'all' = 'week';
+  period: LeaderboardPeriod = 'week';
+  selectedAgeGroupId = 'all';
+  ageGroups: AgeGroupDto[] = [];
   loading = false;
   error = '';
   entries: LeaderboardEntryDto[] = [];
@@ -43,8 +48,8 @@ export class LeaderboardComponent implements OnInit {
       return;
     }
 
-    // Prefer class tab when the student used a class code
     this.selectedTab = this.profile?.classCode ? 'class' : 'age';
+    this.loadAgeGroups();
     this.loadLeaderboard();
   }
 
@@ -53,8 +58,18 @@ export class LeaderboardComponent implements OnInit {
     this.loadLeaderboard();
   }
 
-  setPeriod(period: 'week' | 'all'): void {
+  setPeriod(period: LeaderboardPeriod): void {
     this.period = period;
+    this.loadLeaderboard();
+  }
+
+  setAgeGroup(ageGroupId: string): void {
+    this.selectedAgeGroupId = ageGroupId;
+    this.loadLeaderboard();
+  }
+
+  retryLeaderboard(): void {
+    this.loadAgeGroups();
     this.loadLeaderboard();
   }
 
@@ -71,6 +86,10 @@ export class LeaderboardComponent implements OnInit {
     return entry.studentId;
   }
 
+  get ageGroupOptions(): Array<{ id: string; name: string }> {
+    return [{ id: 'all', name: 'All Age Groups' }, ...this.ageGroups.map((group) => ({ id: group.id, name: group.name }))];
+  }
+
   private scopeFromTab(tab: TabId): LeaderboardScope {
     switch (tab) {
       case 'class':
@@ -82,13 +101,33 @@ export class LeaderboardComponent implements OnInit {
     }
   }
 
+  private loadAgeGroups(): void {
+    this.catalogApi.getAgeGroups().subscribe({
+      next: (groups) => {
+        this.ageGroups = groups;
+        if (this.selectedAgeGroupId === 'all') {
+          const savedAgeGroupId = this.session.getCatalogSelection()?.ageGroupId;
+          if (savedAgeGroupId && groups.some((group) => group.id === savedAgeGroupId)) {
+            this.selectedAgeGroupId = savedAgeGroupId;
+          }
+        }
+      },
+      error: () => {
+        this.error = 'Unable to load leaderboard filters right now. Please try again.';
+        this.entries = [];
+        this.currentStudent = null;
+        this.loading = false;
+      }
+    });
+  }
+
   private loadLeaderboard(): void {
     this.loading = true;
     this.error = '';
 
     const scope = this.scopeFromTab(this.selectedTab);
-    const catalog = this.catalog;
-    const profile = this.profile;
+    const catalog = this.session.getCatalogSelection();
+    const profile = this.session.getProfile();
 
     if (scope === 'category' && !catalog?.categoryId) {
       this.error = 'Pick a category during the quiz flow to view this leaderboard.';
@@ -98,26 +137,26 @@ export class LeaderboardComponent implements OnInit {
       return;
     }
 
-    this.leaderboardApi
-      .getLeaderboard({
-        scope,
-        period: this.period,
-        ageGroupId: catalog?.ageGroupId,
-        categoryId: scope === 'category' ? catalog?.categoryId : undefined,
-        classCode: scope === 'class' ? profile?.classCode : undefined
-      })
-      .subscribe({
-        next: (res) => {
-          this.entries = res.entries ?? [];
-          this.currentStudent = res.currentStudent;
-          this.loading = false;
-        },
-        error: (err) => {
-          this.error = getHttpErrorMessage(err);
-          this.entries = [];
-          this.currentStudent = null;
-          this.loading = false;
-        }
-      });
+    const query = {
+      scope,
+      period: this.period,
+      ...(this.selectedAgeGroupId && this.selectedAgeGroupId !== 'all' ? { ageGroupId: this.selectedAgeGroupId } : {}),
+      ...(scope === 'category' && catalog?.categoryId ? { categoryId: catalog.categoryId } : {}),
+      ...(scope === 'class' && profile?.classCode ? { classCode: profile.classCode } : {})
+    };
+
+    this.leaderboardApi.getLeaderboard(query).subscribe({
+      next: (response) => {
+        this.entries = response.entries ?? [];
+        this.currentStudent = response.currentStudent ?? null;
+        this.loading = false;
+      },
+      error: () => {
+        this.error = 'Unable to load leaderboard data right now. Please try again.';
+        this.entries = [];
+        this.currentStudent = null;
+        this.loading = false;
+      }
+    });
   }
 }

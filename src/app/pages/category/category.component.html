@@ -72,9 +72,19 @@
             <button
               type="button"
               (click)="selectCategory($index)"
+              [disabled]="isCategoryLocked(category.id)"
               class="selection-card !items-start !text-left"
-              [class.selection-card-active]="selectedIndex === $index">
-              <h2 class="text-base font-semibold">{{ category.name }}</h2>
+              [class.selection-card-active]="selectedIndex === $index"
+              [class.cursor-not-allowed]="isCategoryLocked(category.id)"
+              [class.border-slate-200]="!isCategoryLocked(category.id)"
+              [class.bg-slate-100]="isCategoryLocked(category.id)"
+              [class.opacity-75]="isCategoryLocked(category.id)">
+              <div class="flex w-full items-start justify-between gap-2">
+                <h2 class="text-base font-semibold">{{ category.name }}</h2>
+                @if (isCategoryLocked(category.id)) {
+                  <span class="chip bg-slate-200 text-slate-600">Completed</span>
+                }
+              </div>
               <p class="mt-1 text-xs leading-relaxed text-slate-500">{{ category.description }}</p>
             </button>
           }

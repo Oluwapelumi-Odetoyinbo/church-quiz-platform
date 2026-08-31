@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AVATAR_OPTIONS } from '../../core/constants/avatars';
+import { AuthService } from '../../core/services/auth.service';
 import { StudentSessionService } from '../../core/services/student-session.service';
 import { CardComponent } from '../../shared/components/card/card.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
@@ -26,6 +27,7 @@ import { StepProgressComponent } from '../../shared/components/step-progress/ste
 export class LandingPageComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly auth = inject(AuthService);
   private readonly session = inject(StudentSessionService);
 
   name = '';
@@ -37,6 +39,13 @@ export class LandingPageComponent {
   readonly avatars = AVATAR_OPTIONS;
 
   constructor() {
+    if (this.auth.isLoggedIn()) {
+      void this.router.navigate(['/dashboard']);
+      return;
+    }
+
+    void this.router.navigate(['/signup']);
+
     this.sessionExpired = this.route.snapshot.queryParamMap.get('sessionExpired') === '1';
 
     const profile = this.session.getProfile();

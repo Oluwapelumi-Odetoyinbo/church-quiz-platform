@@ -7,7 +7,13 @@
           <div>
             <h1 class="text-xl font-semibold lg:text-2xl">Leaderboard</h1>
             <p class="text-sm text-slate-500">
-              {{ period === 'week' ? 'Top scores this week' : 'All-time top scores' }}
+              {{
+                period === 'week'
+                  ? 'Top scores this week'
+                  : period === 'month'
+                    ? 'Top scores this month'
+                    : 'All-time top scores'
+              }}
               @if (catalog?.categoryName && selectedTab === 'category') {
                 · {{ catalog?.categoryName }}
               }
@@ -45,21 +51,42 @@
           </button>
         </div>
 
-        <div class="tab-group w-full max-w-[180px] sm:w-auto">
-          <button
-            type="button"
-            class="tab-item"
-            [ngClass]="period === 'week' ? 'tab-item-active' : ''"
-            (click)="setPeriod('week')">
-            Week
-          </button>
-          <button
-            type="button"
-            class="tab-item"
-            [ngClass]="period === 'all' ? 'tab-item-active' : ''"
-            (click)="setPeriod('all')">
-            All time
-          </button>
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div class="tab-group w-full max-w-[220px] sm:w-auto">
+            <button
+              type="button"
+              class="tab-item"
+              [ngClass]="period === 'week' ? 'tab-item-active' : ''"
+              (click)="setPeriod('week')">
+              Week
+            </button>
+            <button
+              type="button"
+              class="tab-item"
+              [ngClass]="period === 'month' ? 'tab-item-active' : ''"
+              (click)="setPeriod('month')">
+              Month
+            </button>
+            <button
+              type="button"
+              class="tab-item"
+              [ngClass]="period === 'all' ? 'tab-item-active' : ''"
+              (click)="setPeriod('all')">
+              All Time
+            </button>
+          </div>
+
+          <label class="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600">
+            <span class="font-medium">Age group</span>
+            <select
+              class="bg-transparent text-sm font-medium text-slate-700 outline-none"
+              [value]="selectedAgeGroupId"
+              (change)="setAgeGroup($any($event.target).value)">
+              @for (ageGroup of ageGroupOptions; track ageGroup.id) {
+                <option [value]="ageGroup.id">{{ ageGroup.name }}</option>
+              }
+            </select>
+          </label>
         </div>
       </div>
 
@@ -73,7 +100,10 @@
 
       @if (error) {
         <div class="mt-5 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-          {{ error }}
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <span>{{ error }}</span>
+            <button type="button" class="link-back" (click)="retryLeaderboard()">Try again</button>
+          </div>
         </div>
       }
 
@@ -130,7 +160,7 @@
             </div>
           } @empty {
             <div class="px-4 py-10 text-center text-sm text-slate-400">
-              No rankings yet for this view.
+              No leaderboard results found.
             </div>
           }
         </div>
