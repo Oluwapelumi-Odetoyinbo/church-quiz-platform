@@ -2,9 +2,9 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 
 import { StudentSessionService } from '../services/student-session.service';
+import { AuthService } from '../services/auth.service';
 
-const STUDENT_AUTH_PATHS = ['/quiz/', '/anti-cheat/', '/leaderboard'];
-
+const STUDENT_AUTH_PATHS = ['/quiz/', '/anti-cheat/', '/leaderboard', '/students/'];
 
 export const studentAuthInterceptor: HttpInterceptorFn = (req, next) => {
   const needsStudentAuth = STUDENT_AUTH_PATHS.some((path) => req.url.includes(path));
@@ -14,7 +14,8 @@ export const studentAuthInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   const session = inject(StudentSessionService);
-  const token = session.getToken();
+  const auth = inject(AuthService);
+  const token = session.getToken() || auth.getToken();
 
   if (!token) {
     return next(req);
@@ -28,3 +29,4 @@ export const studentAuthInterceptor: HttpInterceptorFn = (req, next) => {
     })
   );
 };
+

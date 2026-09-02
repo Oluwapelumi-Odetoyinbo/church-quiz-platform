@@ -9,6 +9,7 @@ import type {
   LeaderboardPeriod,
   LeaderboardScope
 } from '../../core/models/api';
+import { AuthService } from '../../core/services/auth.service';
 import { CatalogService } from '../../core/services/catalog.service';
 import { LeaderboardApiService } from '../../core/services/leaderboard-api.service';
 import { StudentSessionService } from '../../core/services/student-session.service';
@@ -26,6 +27,7 @@ type TabId = 'class' | 'age' | 'category';
 })
 export class LeaderboardComponent implements OnInit {
   private readonly router = inject(Router);
+  private readonly auth = inject(AuthService);
   private readonly catalogApi = inject(CatalogService);
   private readonly leaderboardApi = inject(LeaderboardApiService);
   private readonly session = inject(StudentSessionService);
@@ -43,8 +45,8 @@ export class LeaderboardComponent implements OnInit {
   readonly profile = this.session.getProfile();
 
   ngOnInit(): void {
-    if (!this.session.isSessionValid()) {
-      void this.router.navigate(['/']);
+    if (!this.auth.isLoggedIn()) {
+      void this.router.navigate(['/signup']);
       return;
     }
 

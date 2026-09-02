@@ -18,8 +18,11 @@ export class LeaderboardDataService {
   private readonly mockEntries: MockLeaderboardEntry[] = [
     {
       ageGroupId: '7-9',
+      ageGroup: 'Ages 7-9',
       studentId: 'student-001',
-      displayName: 'Ava',
+      firstName: 'Ava',
+      lastName: 'Johnson',
+      displayName: 'Ava Johnson',
       avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Ava',
       points: 980,
       totalScore: 49,
@@ -29,8 +32,11 @@ export class LeaderboardDataService {
     },
     {
       ageGroupId: '7-9',
+      ageGroup: 'Ages 7-9',
       studentId: 'student-002',
-      displayName: 'Milo',
+      firstName: 'Milo',
+      lastName: 'Brown',
+      displayName: 'Milo Brown',
       avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Milo',
       points: 940,
       totalScore: 47,
@@ -40,8 +46,11 @@ export class LeaderboardDataService {
     },
     {
       ageGroupId: '7-9',
+      ageGroup: 'Ages 7-9',
       studentId: 'student-003',
-      displayName: 'Sophia',
+      firstName: 'Sophia',
+      lastName: 'Davis',
+      displayName: 'Sophia Davis',
       avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Sophia',
       points: 900,
       totalScore: 45,
@@ -51,8 +60,11 @@ export class LeaderboardDataService {
     },
     {
       ageGroupId: '7-9',
+      ageGroup: 'Ages 7-9',
       studentId: 'student-004',
-      displayName: 'Noah',
+      firstName: 'Noah',
+      lastName: 'Wilson',
+      displayName: 'Noah Wilson',
       avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Noah',
       points: 820,
       totalScore: 41,
@@ -62,8 +74,11 @@ export class LeaderboardDataService {
     },
     {
       ageGroupId: '10-12',
+      ageGroup: 'Ages 10-12',
       studentId: 'student-101',
-      displayName: 'Liam',
+      firstName: 'Liam',
+      lastName: 'Smith',
+      displayName: 'Liam Smith',
       avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Liam',
       points: 1020,
       totalScore: 51,
@@ -73,8 +88,11 @@ export class LeaderboardDataService {
     },
     {
       ageGroupId: '10-12',
+      ageGroup: 'Ages 10-12',
       studentId: 'student-102',
-      displayName: 'Emma',
+      firstName: 'Emma',
+      lastName: 'Taylor',
+      displayName: 'Emma Taylor',
       avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Emma',
       points: 990,
       totalScore: 50,
@@ -84,8 +102,11 @@ export class LeaderboardDataService {
     },
     {
       ageGroupId: '10-12',
+      ageGroup: 'Ages 10-12',
       studentId: 'student-103',
-      displayName: 'Oliver',
+      firstName: 'Oliver',
+      lastName: 'Anderson',
+      displayName: 'Oliver Anderson',
       avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Oliver',
       points: 960,
       totalScore: 48,
@@ -95,8 +116,11 @@ export class LeaderboardDataService {
     },
     {
       ageGroupId: '13-15',
+      ageGroup: 'Ages 13-15',
       studentId: 'student-201',
-      displayName: 'Harper',
+      firstName: 'Harper',
+      lastName: 'Thomas',
+      displayName: 'Harper Thomas',
       avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Harper',
       points: 1100,
       totalScore: 55,
@@ -106,8 +130,11 @@ export class LeaderboardDataService {
     },
     {
       ageGroupId: '13-15',
+      ageGroup: 'Ages 13-15',
       studentId: 'student-202',
-      displayName: 'Ethan',
+      firstName: 'Ethan',
+      lastName: 'Jackson',
+      displayName: 'Ethan Jackson',
       avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Ethan',
       points: 1060,
       totalScore: 53,
@@ -117,8 +144,11 @@ export class LeaderboardDataService {
     },
     {
       ageGroupId: '13-15',
+      ageGroup: 'Ages 13-15',
       studentId: 'student-203',
-      displayName: 'Isla',
+      firstName: 'Isla',
+      lastName: 'White',
+      displayName: 'Isla White',
       avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Isla',
       points: 1015,
       totalScore: 51,
@@ -128,8 +158,11 @@ export class LeaderboardDataService {
     },
     {
       ageGroupId: '16-18',
+      ageGroup: 'Ages 16-18',
       studentId: 'student-301',
-      displayName: 'Maya',
+      firstName: 'Maya',
+      lastName: 'Harris',
+      displayName: 'Maya Harris',
       avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Maya',
       points: 1185,
       totalScore: 59,
@@ -139,8 +172,11 @@ export class LeaderboardDataService {
     },
     {
       ageGroupId: '16-18',
+      ageGroup: 'Ages 16-18',
       studentId: 'student-302',
-      displayName: 'Leo',
+      firstName: 'Leo',
+      lastName: 'Martin',
+      displayName: 'Leo Martin',
       avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Leo',
       points: 1128,
       totalScore: 56,
@@ -150,8 +186,11 @@ export class LeaderboardDataService {
     },
     {
       ageGroupId: '16-18',
+      ageGroup: 'Ages 16-18',
       studentId: 'student-303',
-      displayName: 'Zoe',
+      firstName: 'Zoe',
+      lastName: 'Clark',
+      displayName: 'Zoe Clark',
       avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Zoe',
       points: 1096,
       totalScore: 55,
@@ -174,7 +213,7 @@ export class LeaderboardDataService {
     });
 
     const periodFactor = this.getPeriodFactor(filters.period);
-    const entries = filtered
+    const entries: LeaderboardEntryDto[] = filtered
       .map((entry, index) => ({
         ...entry,
         points: Math.round(entry.points * periodFactor),
@@ -201,7 +240,7 @@ export class LeaderboardDataService {
       : null;
 
     return {
-      entries: entries.map(({ ageGroupId: _ageGroupId, ...entry }) => entry),
+      entries,
       currentStudent
     };
   }

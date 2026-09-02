@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 import type { AgeGroupDto } from '../../core/models/api';
+import { AuthService } from '../../core/services/auth.service';
 import { CatalogService } from '../../core/services/catalog.service';
 import { StudentSessionService } from '../../core/services/student-session.service';
 import { getHttpErrorMessage } from '../../core/interceptors/error.interceptor';
@@ -32,6 +33,7 @@ const AGE_ICONS: Record<string, { icon: string; label: string }> = {
 })
 export class AgeGroupPageComponent implements OnInit {
   private readonly router = inject(Router);
+  private readonly auth = inject(AuthService);
   private readonly catalog = inject(CatalogService);
   private readonly session = inject(StudentSessionService);
 
@@ -41,8 +43,8 @@ export class AgeGroupPageComponent implements OnInit {
   error = '';
 
   ngOnInit(): void {
-    if (!this.session.hasProfile()) {
-      void this.router.navigate(['/']);
+    if (!this.auth.isLoggedIn()) {
+      void this.router.navigate(['/signup']);
       return;
     }
 

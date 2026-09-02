@@ -24,14 +24,13 @@ describe('AuthService', () => {
 
   it('sends the signup payload expected by the backend and stores the session', () => {
     const payload: SignUpRequest = {
-      email: 'paul@example.com',
+      firstName: 'Paul',
+      lastName: 'Smith',
       username: 'paul123',
       password: 'SecurePass1'
     };
 
     service.signupUser(payload).subscribe((session) => {
-      expect(session.user.userId).toBe('user-123');
-      expect(session.user.email).toBe('paul@example.com');
       expect(session.user.username).toBe('paul123');
     });
 
@@ -43,21 +42,21 @@ describe('AuthService', () => {
       accessToken: 'access-token',
       expiresAt: new Date(Date.now() + 60_000).toISOString(),
       user: {
-        userId: 'user-123',
-        email: 'paul@example.com',
+        studentId: 'student-123',
+        firstName: 'Paul',
+        lastName: 'Smith',
         username: 'paul123'
       }
     });
   });
 
-  it('sends the login payload using username or email', () => {
+  it('sends the login payload using username', () => {
     const payload: LoginRequest = {
-      usernameOrEmail: 'paul@example.com',
+      username: 'paul123',
       password: 'SecurePass1'
     };
 
     service.loginUser(payload).subscribe((session) => {
-      expect(session.user.email).toBe('paul@example.com');
       expect(session.user.username).toBe('paul123');
     });
 
@@ -69,8 +68,9 @@ describe('AuthService', () => {
       accessToken: 'access-token',
       expiresAt: new Date(Date.now() + 60_000).toISOString(),
       user: {
-        userId: 'user-123',
-        email: 'paul@example.com',
+        studentId: 'student-123',
+        firstName: 'Paul',
+        lastName: 'Smith',
         username: 'paul123'
       }
     });

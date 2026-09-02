@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import type { CategoryDto } from '../../core/models/api';
+import { AuthService } from '../../core/services/auth.service';
 import { CatalogService } from '../../core/services/catalog.service';
 import { StudentApiService } from '../../core/services/student-api.service';
 import { StudentSessionService } from '../../core/services/student-session.service';
@@ -28,6 +29,7 @@ import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner
 export class CategoryPageComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly auth = inject(AuthService);
   private readonly catalog = inject(CatalogService);
   private readonly studentApi = inject(StudentApiService);
   private readonly session = inject(StudentSessionService);
@@ -41,8 +43,8 @@ export class CategoryPageComponent implements OnInit {
   error = '';
 
   ngOnInit(): void {
-    if (!this.session.hasProfile()) {
-      void this.router.navigate(['/']);
+    if (!this.auth.isLoggedIn()) {
+      void this.router.navigate(['/signup']);
       return;
     }
 
@@ -115,7 +117,7 @@ export class CategoryPageComponent implements OnInit {
     const profile = this.session.getProfile();
     const category = this.categories[this.selectedIndex];
 
-    if (!profile || !category || !this.ageGroupId || this.starting) {
+    if (!category || !this.ageGroupId || this.starting) {
       return;
     }
 
@@ -137,8 +139,8 @@ export class CategoryPageComponent implements OnInit {
     const body = {
       ageGroupId: this.ageGroupId,
       categoryId: category.id,
-      ...(profile.avatarUrl ? { avatarUrl: profile.avatarUrl } : {}),
-      ...(profile.classCode ? { classCode: profile.classCode } : {})
+      ...(profile?.avatarUrl ? { avatarUrl: profile.avatarUrl } : {}),
+      ...(profile?.classCode ? { classCode: profile.classCode } : {})
     };
 
     this.studentApi.start(body).subscribe({

@@ -5,6 +5,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 import type { ReviewItemDto, SubmitQuizResponse } from '../../core/models/api';
 import { QuizApiService } from '../../core/services/quiz-api.service';
+import { StudentApiService } from '../../core/services/student-api.service';
 import { StudentSessionService } from '../../core/services/student-session.service';
 import { getHttpErrorMessage } from '../../core/interceptors/error.interceptor';
 import { CardComponent } from '../../shared/components/card/card.component';
@@ -22,6 +23,7 @@ export class ResultsPageComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly quizApi = inject(QuizApiService);
+  private readonly studentApi = inject(StudentApiService);
   private readonly session = inject(StudentSessionService);
 
   readonly attemptId = signal(this.route.snapshot.paramMap.get('attemptId') ?? '');
@@ -32,6 +34,7 @@ export class ResultsPageComponent implements OnInit {
   readonly correctCount = computed(() => this.result()?.totalScore ?? 0);
   readonly totalCount = computed(() => this.result()?.maxScore ?? 0);
   readonly review = computed(() => this.result()?.review ?? []);
+  readonly isCycleReset = computed(() => !!this.result()?.cycleReset);
   readonly scorePercent = computed(() => {
     const total = this.totalCount();
     if (total === 0) return 0;
@@ -91,6 +94,7 @@ export class ResultsPageComponent implements OnInit {
     if (cached && cached.attemptId === attemptId) {
       this.result.set(cached);
       this.loading.set(false);
+      this.refreshProgress();
       return;
     }
 
@@ -99,6 +103,7 @@ export class ResultsPageComponent implements OnInit {
         this.result.set(review);
         this.session.setResult(review);
         this.loading.set(false);
+        this.refreshProgress();
       },
       error: (err: HttpErrorResponse) => {
         this.error.set(getHttpErrorMessage(err));
@@ -107,22 +112,28 @@ export class ResultsPageComponent implements OnInit {
     });
   }
 
+  private refreshProgress(): void {
+    this.studentApi.getProgress().subscribe({
+      next: (progress) => {
+        if (progress) {
+          this.session.setAvailableSubjects(progress.availableCategoryIds ?? []);
+          this.session.setCompletedSubjects(progress.completedCategoryIds ?? []);
+        }
+      },
+      error: () => {}
+    });
+  }
+
   playAgain(): void {
     const ageGroupId = this.session.getCatalogSelection()?.ageGroupId;
     this.session.clearAttempt();
 
-    if (ageGroupId && this.session.hasProfile()) {
+    if (ageGroupId) {
       void this.router.navigate(['/category', ageGroupId]);
       return;
     }
 
-    if (this.session.hasProfile()) {
-      void this.router.navigate(['/age-group']);
-      return;
-    }
-
-    this.session.clear();
-    void this.router.navigate(['/']);
+    void this.router.navigate(['/age-group']);
   }
 
   viewLeaderboard(): void {

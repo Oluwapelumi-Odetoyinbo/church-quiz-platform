@@ -40,7 +40,7 @@ export class LandingPageComponent {
 
   constructor() {
     if (this.auth.isLoggedIn()) {
-      void this.router.navigate(['/dashboard']);
+      void this.router.navigate(['/age-group']);
       return;
     }
 

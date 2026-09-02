@@ -12,18 +12,18 @@
 
         <form [formGroup]="form" (ngSubmit)="submit()" class="mt-6 space-y-5">
           <div>
-            <label class="field-label" for="usernameOrEmail">Username or Email</label>
+            <label class="field-label" for="username">Username</label>
             <input
-              id="usernameOrEmail"
+              id="username"
               type="text"
               class="field-input"
-              [class.field-input-error]="form.get('usernameOrEmail')?.touched && form.get('usernameOrEmail')?.invalid"
-              formControlName="usernameOrEmail"
-              placeholder="Enter your username or email" />
-            @if (form.get('usernameOrEmail')?.touched && form.get('usernameOrEmail')?.hasError('required')) {
-              <p class="mt-1.5 text-xs text-rose-500">Username or email is required.</p>
+              [class.field-input-error]="form.get('username')?.touched && form.get('username')?.invalid"
+              formControlName="username"
+              placeholder="Enter your username" />
+            @if (form.get('username')?.touched && form.get('username')?.hasError('required')) {
+              <p class="mt-1.5 text-xs text-rose-500">Username is required.</p>
             }
-            @if (form.get('usernameOrEmail')?.touched && form.get('usernameOrEmail')?.hasError('minlength')) {
+            @if (form.get('username')?.touched && form.get('username')?.hasError('minlength')) {
               <p class="mt-1.5 text-xs text-rose-500">Please enter at least 3 characters.</p>
             }
           </div>

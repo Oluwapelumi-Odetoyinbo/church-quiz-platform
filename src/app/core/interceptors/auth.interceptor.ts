@@ -2,7 +2,7 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
-const STUDENT_AUTH_PATHS = ['/quiz/', '/anti-cheat/', '/leaderboard'];
+const STUDENT_AUTH_PATHS = ['/quiz/', '/anti-cheat/', '/leaderboard', '/students/'];
 
 const ADMIN_PUBLIC_AUTH_PATHS = ['/admin/auth/'];
 

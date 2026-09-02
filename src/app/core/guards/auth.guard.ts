@@ -19,7 +19,7 @@ export const publicAuthGuard: CanActivateFn = () => {
   const router = inject(Router);
 
   if (auth.isLoggedIn()) {
-    return router.createUrlTree(['/dashboard']);
+    return router.createUrlTree(['/age-group']);
   }
 
   return true;
@@ -30,6 +30,6 @@ export const rootRouteGuard: CanActivateFn = () => {
   const router = inject(Router);
 
   return auth.isLoggedIn()
-    ? router.createUrlTree(['/dashboard'])
+    ? router.createUrlTree(['/age-group'])
     : router.createUrlTree(['/signup']);
 };

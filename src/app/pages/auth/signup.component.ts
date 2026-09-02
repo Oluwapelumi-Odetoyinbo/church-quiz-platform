@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
 import { AuthService } from '../../core/services/auth.service';
+import { getHttpErrorMessage } from '../../core/interceptors/error.interceptor';
 import { CardComponent } from '../../shared/components/card/card.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { AppLogoComponent } from '../../shared/components/app-logo/app-logo.component';
@@ -15,7 +16,7 @@ import { AppLogoComponent } from '../../shared/components/app-logo/app-logo.comp
   imports: [CommonModule, ReactiveFormsModule, RouterLink, CardComponent, ButtonComponent, AppLogoComponent],
   templateUrl: './signup.component.html'
 })
-export class SignupComponent {
+export class SignupComponent implements OnDestroy {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
@@ -29,7 +30,8 @@ export class SignupComponent {
 
   readonly form: FormGroup = this.fb.group(
     {
-      email: ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
+      firstName: ['', [Validators.required, Validators.maxLength(50)]],
+      lastName: ['', [Validators.required, Validators.maxLength(50)]],
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z0-9_]+$/)]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]]
@@ -39,7 +41,7 @@ export class SignupComponent {
 
   constructor() {
     if (this.auth.isLoggedIn()) {
-      void this.router.navigate(['/dashboard']);
+      void this.router.navigate(['/age-group']);
     }
 
     this.form.get('username')?.valueChanges
@@ -78,6 +80,11 @@ export class SignupComponent {
       });
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   submit(): void {
     this.form.markAllAsTouched();
 
@@ -99,18 +106,25 @@ export class SignupComponent {
     this.error = '';
 
     this.auth.signupUser({
-      email: this.form.value.email.trim(),
+      firstName: this.form.value.firstName.trim(),
+      lastName: this.form.value.lastName.trim(),
       username: this.form.value.username.trim(),
       password: this.form.value.password
     }).subscribe({
       next: (session) => {
         this.auth.storeSession(session);
         this.loading = false;
-        void this.router.navigate(['/dashboard']);
+        void this.router.navigate(['/age-group']);
       },
-      error: () => {
-        this.error = 'We could not create your account right now. Please try again.';
+      error: (err) => {
         this.loading = false;
+        if (err.status === 409) {
+          this.usernameStatus = 'taken';
+          this.usernameMessage = 'Username is already taken.';
+          this.error = 'Username is already taken.';
+        } else {
+          this.error = getHttpErrorMessage(err) || 'We could not create your account right now. Please try again.';
+        }
       }
     });
   }
@@ -122,3 +136,4 @@ export class SignupComponent {
     return password && confirmPassword && password !== confirmPassword ? { passwordMismatch: true } : null;
   }
 }
+

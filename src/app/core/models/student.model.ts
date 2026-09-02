@@ -1,12 +1,8 @@
-export interface Student {
-  id: string;
-  studentId?: string;
+export interface StudentUser {
+  studentId: string;
   firstName: string;
   lastName: string;
-  email?: string;
   username: string;
-  ageGroupId?: string;
-  registeredAt?: Date;
 }
 
 export interface User {
@@ -29,17 +25,18 @@ export interface UserSession {
   accessToken: string;
   refreshToken?: string;
   expiresAt?: string | null;
-  user: User;
+  user: StudentUser | User;
 }
 
 export interface SignUpRequest {
-  email: string;
+  firstName: string;
+  lastName: string;
   username: string;
   password: string;
 }
 
 export interface LoginRequest {
-  usernameOrEmail: string;
+  username: string;
   password: string;
 }
 
@@ -48,3 +45,4 @@ export interface UsernameAvailabilityResponse {
   username?: string;
   message?: string;
 }
+

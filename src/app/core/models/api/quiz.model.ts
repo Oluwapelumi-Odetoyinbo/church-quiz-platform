@@ -57,5 +57,6 @@ export interface SubmitQuizResponse {
   difficultyBreakdown: DifficultyBreakdown;
   difficultyBreakdownDisplay: string;
   status: string;
+  cycleReset?: boolean;
   review: ReviewItemDto[];
 }

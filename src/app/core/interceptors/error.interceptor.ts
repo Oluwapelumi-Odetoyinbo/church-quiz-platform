@@ -17,6 +17,10 @@ export function getHttpErrorMessage(error: HttpErrorResponse): string {
       return body.message;
     }
 
+    if (body.message && typeof body.message === 'object' && typeof body.message.message === 'string') {
+      return body.message.message;
+    }
+
     if (Array.isArray(body.message)) {
       return body.message.join(', ');
     }
@@ -26,11 +30,13 @@ export function getHttpErrorMessage(error: HttpErrorResponse): string {
     case 400:
       return 'Something went wrong with your request. Please check and try again.';
     case 401:
-      return 'Your session expired. Please start again.';
+      return 'Invalid username or password, or your session has expired.';
     case 403:
       return 'You do not have access to this quiz.';
     case 404:
       return 'Quiz not found.';
+    case 409:
+      return 'Username is already taken.';
     case 503:
       return 'Questions are not ready yet. Please ask your teacher to set up the question bank.';
     default:
@@ -51,9 +57,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         error: error.error
       });
 
-      if (error.status === 401 && (req.url.includes('/quiz/') || req.url.includes('/anti-cheat/'))) {
+      if (error.status === 401 && (req.url.includes('/quiz/') || req.url.includes('/students/') || req.url.includes('/anti-cheat/'))) {
         session.clear();
-        void router.navigate(['/'], { queryParams: { sessionExpired: '1' } });
+        void router.navigate(['/login'], { queryParams: { sessionExpired: '1' } });
       }
 
       return throwError(() => error);

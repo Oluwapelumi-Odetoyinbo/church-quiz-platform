@@ -11,21 +11,34 @@
         </div>
 
         <form [formGroup]="form" (ngSubmit)="submit()" class="mt-6 space-y-5">
-          <div>
-            <label class="field-label" for="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              class="field-input"
-              [class.field-input-error]="form.get('email')?.touched && form.get('email')?.invalid"
-              formControlName="email"
-              placeholder="Enter your email" />
-            @if (form.get('email')?.touched && form.get('email')?.hasError('required')) {
-              <p class="mt-1.5 text-xs text-rose-500">Email is required.</p>
-            }
-            @if (form.get('email')?.touched && form.get('email')?.hasError('email')) {
-              <p class="mt-1.5 text-xs text-rose-500">Please enter a valid email address.</p>
-            }
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="field-label" for="firstName">First name</label>
+              <input
+                id="firstName"
+                type="text"
+                class="field-input"
+                [class.field-input-error]="form.get('firstName')?.touched && form.get('firstName')?.invalid"
+                formControlName="firstName"
+                placeholder="First name" />
+              @if (form.get('firstName')?.touched && form.get('firstName')?.hasError('required')) {
+                <p class="mt-1.5 text-xs text-rose-500">First name is required.</p>
+              }
+            </div>
+
+            <div>
+              <label class="field-label" for="lastName">Last name</label>
+              <input
+                id="lastName"
+                type="text"
+                class="field-input"
+                [class.field-input-error]="form.get('lastName')?.touched && form.get('lastName')?.invalid"
+                formControlName="lastName"
+                placeholder="Last name" />
+              @if (form.get('lastName')?.touched && form.get('lastName')?.hasError('required')) {
+                <p class="mt-1.5 text-xs text-rose-500">Last name is required.</p>
+              }
+            </div>
           </div>
 
           <div>

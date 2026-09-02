@@ -24,12 +24,12 @@ export class LoginComponent {
 
   constructor() {
     if (this.auth.isLoggedIn()) {
-      void this.router.navigate(['/dashboard']);
+      void this.router.navigate(['/age-group']);
     }
   }
 
   readonly form: FormGroup = this.fb.group({
-    usernameOrEmail: ['', [Validators.required, Validators.minLength(3)]],
+    username: ['', [Validators.required, Validators.minLength(3)]],
     password: ['', [Validators.required, Validators.minLength(8)]]
   });
 
@@ -44,13 +44,13 @@ export class LoginComponent {
     this.error = '';
 
     this.auth.loginUser({
-      usernameOrEmail: this.form.value.usernameOrEmail.trim(),
+      username: this.form.value.username.trim(),
       password: this.form.value.password
     }).subscribe({
       next: (session) => {
         this.auth.storeSession(session);
         this.loading = false;
-        void this.router.navigate(['/dashboard']);
+        void this.router.navigate(['/age-group']);
       },
       error: () => {
         this.error = 'Invalid username or password. Please try again.';
